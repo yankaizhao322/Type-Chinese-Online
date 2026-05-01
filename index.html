@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Type Chinese</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #18211f;
+      --muted: #5d6764;
+      --line: #d8e0dd;
+      --paper: #f7faf8;
+      --panel: #ffffff;
+      --accent: #087b73;
+      --accent-dark: #066760;
+      --warm: #c94b31;
+      --soft: #eaf4f2;
+      --mark: #fff4d6;
+      --shadow: 0 16px 42px rgba(24, 33, 31, 0.11);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(8, 123, 115, 0.09), rgba(247, 250, 248, 0) 320px),
+        var(--paper);
+    }
+
+    button, textarea, input {
+      font: inherit;
+    }
+
+    .app {
+      width: min(1080px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 24px 0 36px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 5vw, 54px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      border: 1px solid #cfe4df;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #174b45;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .pane, .side {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      min-width: 0;
+    }
+
+    .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .head strong {
+      font-size: 14px;
+    }
+
+    .tools {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .icon-btn, .text-btn {
+      min-height: 38px;
+      border: 1px solid #c8d5d1;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 7px;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    }
+
+    .icon-btn {
+      width: 38px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 17px;
+    }
+
+    .text-btn {
+      padding: 0 12px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .primary {
+      color: #fff;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .icon-btn:hover, .text-btn:hover {
+      background: var(--soft);
+      border-color: #9bc9c1;
+    }
+
+    .primary:hover {
+      background: var(--accent-dark);
+      border-color: var(--accent-dark);
+    }
+
+    .icon-btn:active, .text-btn:active {
+      transform: translateY(1px);
+    }
+
+    .workspace {
+      padding: 14px;
+    }
+
+    .label {
+      display: block;
+      margin: 0 0 7px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .pinyin-line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    #pinyinInput {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #c8d5d1;
+      border-radius: 8px;
+      padding: 10px 12px;
+      outline: none;
+      background: #fff;
+      color: var(--ink);
+      font-size: 18px;
+    }
+
+    #pinyinInput:focus, #outputText:focus {
+      border-color: #86bfb7;
+      box-shadow: 0 0 0 3px rgba(8, 123, 115, 0.12);
+    }
+
+    .candidate-bar {
+      display: grid;
+      gap: 8px;
+      min-height: 52px;
+      border: 1px solid #dbe6e2;
+      border-radius: 8px;
+      background: #fbfdfc;
+      padding: 8px;
+      margin-bottom: 12px;
+    }
+
+    .candidates {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .candidate {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+      border: 1px solid #cddbd7;
+      border-radius: 7px;
+      background: #fff;
+      padding: 4px 10px;
+      cursor: pointer;
+      color: #17211f;
+    }
+
+    .candidate:first-child {
+      border-color: var(--accent);
+      background: var(--soft);
+    }
+
+    .candidate span {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    #outputText {
+      width: 100%;
+      min-height: 360px;
+      resize: vertical;
+      border: 1px solid #c8d5d1;
+      border-radius: 8px;
+      outline: none;
+      padding: 14px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 22px;
+      line-height: 1.65;
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .side {
+      overflow: hidden;
+    }
+
+    .section {
+      padding: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .section:first-child {
+      border-top: 0;
+    }
+
+    .section h2 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .section p, .section li {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .section ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .kbd {
+      display: inline-block;
+      min-width: 22px;
+      border: 1px solid #cbd7d4;
+      border-bottom-width: 2px;
+      border-radius: 5px;
+      background: #fff;
+      color: var(--ink);
+      padding: 1px 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .samples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .sample {
+      border: 1px solid #d5dfdc;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--ink);
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .mark {
+      display: inline-block;
+      margin-top: 8px;
+      border: 1px solid #e7d08c;
+      border-radius: 8px;
+      background: var(--mark);
+      color: #604606;
+      padding: 8px 10px;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 880px) {
+      header {
+        display: block;
+      }
+
+      .status {
+        margin-top: 14px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pinyin-line {
+        grid-template-columns: 1fr;
+      }
+
+      #outputText {
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>Type Chinese</h1>
+        <p class="subtitle">Type pinyin, pick a candidate, and build Chinese text in the output box. This is a small frontend-only IME, so it runs locally and can be shared on your Wi-Fi with a simple local server.</p>
+      </div>
+      <div class="status"><span class="dot"></span><span>Frontend only</span></div>
+    </header>
+
+    <section class="grid" aria-label="Pinyin input app">
+      <div class="pane">
+        <div class="head">
+          <strong>Compose</strong>
+          <div class="tools">
+            <button class="icon-btn" id="undoBtn" title="Undo last Chinese character" aria-label="Undo last Chinese character">↶</button>
+            <button class="icon-btn" id="copyBtn" title="Copy Chinese output" aria-label="Copy Chinese output">⧉</button>
+            <button class="text-btn" id="clearBtn">Clear</button>
+          </div>
+        </div>
+        <div class="workspace">
+          <label class="label" for="pinyinInput">Pinyin input</label>
+          <div class="pinyin-line">
+            <input id="pinyinInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type nihao, zhongwen, wo ai ni...">
+            <button class="text-btn primary" id="commitBtn">Commit</button>
+          </div>
+
+          <div class="candidate-bar" aria-live="polite">
+            <div class="candidates" id="candidateList"></div>
+            <div class="hint" id="candidateHint">Start typing pinyin to see Chinese candidates.</div>
+          </div>
+
+          <label class="label" for="outputText">Chinese output</label>
+          <textarea id="outputText" placeholder="中文输出..." lang="zh-CN" spellcheck="false"></textarea>
+        </div>
+      </div>
+
+      <aside class="side" aria-label="Help">
+        <section class="section">
+          <h2>Keyboard</h2>
+          <ul>
+            <li><span class="kbd">Space</span> commits the first candidate.</li>
+            <li><span class="kbd">1</span> to <span class="kbd">9</span> chooses a candidate.</li>
+            <li><span class="kbd">Enter</span> commits the visible pinyin.</li>
+            <li><span class="kbd">Backspace</span> removes the last Chinese character when the pinyin box is empty.</li>
+          </ul>
+        </section>
+
+        <section class="section">
+          <h2>Try these</h2>
+          <div class="samples" id="sampleList"></div>
+          <div class="mark">Tip: phrases like <b>nihao</b>, <b>weixin</b>, <b>xiazai</b>, and <b>zhongwen</b> are recognized first. The app fills up to nine candidates when possible.</div>
+        </section>
+
+        <section class="section">
+          <h2>Share on your Wi-Fi</h2>
+          <p>Double-click <b>start-local.command</b>, then open the printed Network URL on another computer connected to the same Wi-Fi.</p>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const phraseMap = {
+      nihao: ["你好", "你号"],
+      ninhao: ["您好"],
+      zaoshanghao: ["早上好"],
+      wanshanghao: ["晚上好"],
+      xiexie: ["谢谢"],
+      buxie: ["不谢"],
+      zaijian: ["再见"],
+      duibuqi: ["对不起"],
+      meiguanxi: ["没关系"],
+      qingwen: ["请问"],
+      qing: ["请", "清", "情", "轻"],
+      woaini: ["我爱你"],
+      woai: ["我爱"],
+      woshi: ["我是"],
+      "nihao ma": ["你好吗"],
+      nihaoma: ["你好吗"],
+      "wo hen hao": ["我很好"],
+      wohenhao: ["我很好"],
+      zhongwen: ["中文"],
+      hanyu: ["汉语"],
+      putonghua: ["普通话"],
+      zhongguo: ["中国"],
+      meiguo: ["美国"],
+      jintian: ["今天"],
+      mingtian: ["明天"],
+      zuotian: ["昨天"],
+      xianzai: ["现在"],
+      pengyou: ["朋友"],
+      laoshi: ["老师"],
+      xuesheng: ["学生"],
+      xuexi: ["学习"],
+      gongzuo: ["工作"],
+      shengri: ["生日"],
+      kuaile: ["快乐"],
+      shengrikuaile: ["生日快乐"],
+      henhao: ["很好"],
+      keyi: ["可以"],
+      bukeqi: ["不客气"],
+      buyao: ["不要"],
+      meiyou: ["没有"],
+      "youmei you": ["有没有"],
+      youmeiyou: ["有没有"],
+      duoshao: ["多少"],
+      duoshaoqian: ["多少钱"],
+      "zai nali": ["在哪里"],
+      zainali: ["在哪里"],
+      "wo yao": ["我要"],
+      woyao: ["我要"],
+      "ni yao": ["你要"],
+      niyao: ["你要"],
+      "chi fan": ["吃饭"],
+      chifan: ["吃饭"],
+      "he shui": ["喝水"],
+      heshui: ["喝水"],
+      "kan dianying": ["看电影"],
+      kandianying: ["看电影"],
+      "da dianhua": ["打电话"],
+      dadianhua: ["打电话"],
+      "mei wenti": ["没问题"],
+      meiwenti: ["没问题"],
+      "wo bu zhidao": ["我不知道"],
+      wobuzhidao: ["我不知道"],
+      "ni jiao shenme mingzi": ["你叫什么名字"],
+      nijiaoshenmemingzi: ["你叫什么名字"],
+      "hen gaoxing renshi ni": ["很高兴认识你"],
+      hengaoxingrenshini: ["很高兴认识你"],
+      ai: ["爱", "矮", "挨", "哎", "碍", "人工智能"],
+      app: ["应用", "软件"],
+      wifi: ["无线网", "网络"],
+      wifai: ["无线网", "网络"],
+      hulianwang: ["互联网"],
+      wangluo: ["网络", "网罗"],
+      shangwang: ["上网"],
+      duanwang: ["断网"],
+      wangsu: ["网速"],
+      xinhao: ["信号"],
+      liuliang: ["流量"],
+      remen: ["热门"],
+      resou: ["热搜"],
+      sousuo: ["搜索"],
+      "sousuoyin qing": ["搜索引擎"],
+      sousuoyinqing: ["搜索引擎"],
+      wangzhan: ["网站"],
+      wangye: ["网页"],
+      lianjie: ["链接", "连接"],
+      dizhi: ["地址"],
+      erweima: ["二维码"],
+      shouji: ["手机"],
+      diannao: ["电脑"],
+      pingban: ["平板"],
+      shebei: ["设备"],
+      shezhi: ["设置"],
+      tongzhi: ["通知"],
+      xiaoxi: ["消息"],
+      duanxin: ["短信"],
+      dianhua: ["电话"],
+      shipin: ["视频"],
+      yinpin: ["音频"],
+      zhibo: ["直播"],
+      tupian: ["图片"],
+      zhaopian: ["照片"],
+      wenjian: ["文件"],
+      wendang: ["文档"],
+      biaoge: ["表格"],
+      xiazai: ["下载"],
+      shangchuan: ["上传"],
+      baocun: ["保存"],
+      shanchu: ["删除"],
+      fuzhi: ["复制"],
+      zhantie: ["粘贴"],
+      jiantie: ["剪贴"],
+      bianji: ["编辑"],
+      fabu: ["发布"],
+      gengxin: ["更新"],
+      anzhuang: ["安装"],
+      xiezai: ["卸载"],
+      banben: ["版本"],
+      xitong: ["系统"],
+      ruanjian: ["软件"],
+      yingyong: ["应用"],
+      liulanqi: ["浏览器"],
+      zhanghao: ["账号"],
+      mima: ["密码"],
+      yanzhengma: ["验证码"],
+      denglu: ["登录"],
+      dengchu: ["登出"],
+      zhuce: ["注册"],
+      zhaohuimima: ["找回密码"],
+      youxiang: ["邮箱"],
+      dianziyoujian: ["电子邮件"],
+      shouye: ["首页"],
+      gerenzhuye: ["个人主页"],
+      touxiang: ["头像"],
+      nicheng: ["昵称"],
+      pinglun: ["评论"],
+      huifu: ["回复"],
+      dianzan: ["点赞"],
+      shoucang: ["收藏"],
+      guanzhu: ["关注"],
+      quxiao: ["取消"],
+      zhuanfa: ["转发"],
+      fenxiang: ["分享"],
+      sixin: ["私信"],
+      qunliao: ["群聊"],
+      haoyou: ["好友"],
+      pengyouquan: ["朋友圈"],
+      gongzhonghao: ["公众号"],
+      xiaochengxu: ["小程序"],
+      weixin: ["微信"],
+      weibo: ["微博"],
+      douyin: ["抖音"],
+      kuaishou: ["快手"],
+      bilibili: ["哔哩哔哩"],
+      xiaohongshu: ["小红书"],
+      zhihu: ["知乎"],
+      taobao: ["淘宝"],
+      jingdong: ["京东"],
+      pinduoduo: ["拼多多"],
+      zhifubao: ["支付宝"],
+      waimai: ["外卖"],
+      kuaidi: ["快递"],
+      dingdan: ["订单"],
+      youhuiquan: ["优惠券"],
+      huiyuan: ["会员"],
+      kefu: ["客服"],
+      zaixian: ["在线"],
+      lixian: ["离线"],
+      daohang: ["导航"],
+      ditu: ["地图"],
+      dache: ["打车"],
+      ditie: ["地铁"],
+      gaotie: ["高铁"],
+      feiji: ["飞机"],
+      jipiao: ["机票"],
+      jiudian: ["酒店"],
+      yuyue: ["预约"],
+      queren: ["确认"],
+      zhifu: ["支付"],
+      tuikuan: ["退款"],
+      fapiao: ["发票"],
+      huiyi: ["会议"],
+      xiangmu: ["项目"],
+      renwu: ["任务"],
+      tongbu: ["同步"],
+      yunpan: ["云盘"],
+      beifen: ["备份"],
+      jietu: ["截图"],
+      pingmu: ["屏幕"],
+      shexiangtou: ["摄像头"],
+      maikefeng: ["麦克风"],
+      shuju: ["数据"],
+      daima: ["代码"],
+      chengxu: ["程序"],
+      wangyou: ["网友"],
+      gonglue: ["攻略"],
+      biaoqing: ["表情"],
+      biaoqingbao: ["表情包"],
+      haoping: ["好评"],
+      chaping: ["差评"],
+      tuijian: ["推荐"],
+      shoucangjia: ["收藏夹"],
+      "tai hao le": ["太好了"],
+      taihaole: ["太好了"],
+      "mei shi": ["没事"],
+      meishi: ["没事"],
+      "ma shang": ["马上"],
+      mashang: ["马上"],
+      "deng yi xia": ["等一下"],
+      dengyixia: ["等一下"],
+      "kan yi xia": ["看一下"],
+      kanyixia: ["看一下"]
+    };
+
+    const syllables = {
+      a: "啊阿吖", ai: "爱矮挨哎碍", an: "安按俺案暗岸", ang: "昂",
+      ba: "把爸八吧巴拔罢", bai: "白百摆败拜", ban: "半办班版般搬板", bang: "帮棒邦榜",
+      bao: "包报保宝抱饱爆", bei: "被北杯背倍贝", ben: "本奔笨", beng: "崩蹦甭",
+      bi: "比笔必闭毕鼻币", bian: "边变便遍编", biao: "表标", bie: "别憋",
+      bin: "宾斌", bing: "并病冰兵饼", bo: "波播博伯薄", bu: "不步部布补",
+      ca: "擦", cai: "才菜财采猜", can: "参餐残惨", cang: "藏仓", cao: "草操曹",
+      ce: "侧册测", cen: "岑", ceng: "曾层", cha: "查茶差插", chai: "拆柴",
+      chan: "产缠馋禅", chang: "长常场唱厂", chao: "超朝吵炒", che: "车撤扯",
+      chen: "陈沉晨尘", cheng: "成城程称诚", chi: "吃持迟尺赤", chong: "冲重虫充",
+      chou: "抽丑愁臭", chu: "出除处初楚", chuan: "穿船传川", chuang: "床窗创",
+      chui: "吹垂", chun: "春纯唇", chuo: "戳", ci: "次此词瓷慈", cong: "从聪葱",
+      cou: "凑", cu: "粗促醋", cuan: "窜", cui: "催脆翠", cun: "村存寸", cuo: "错措搓",
+      da: "大打达答搭", dai: "带代待呆袋", dan: "但单蛋淡担", dang: "当党挡档",
+      dao: "到道倒刀岛", de: "的得德", dei: "得", deng: "等灯邓登", di: "地第低底弟",
+      dian: "点电店典垫殿颠碘滇", diao: "掉调钓雕", die: "爹跌叠", ding: "定顶丁订", diu: "丢",
+      dong: "东动懂冬", dou: "都斗豆逗", du: "读度都独堵", duan: "短段断端",
+      dui: "对队堆", dun: "顿盾吨蹲", duo: "多朵躲夺", e: "饿额鹅恶", ei: "诶",
+      en: "恩", er: "二儿耳而", fa: "发法罚", fan: "饭反烦范翻", fang: "方房放防",
+      fei: "飞非费肥", fen: "分份粉芬", feng: "风封峰疯", fo: "佛", fou: "否",
+      fu: "服福付夫父府复", ga: "噶尬", gai: "该改盖", gan: "干敢感赶", gang: "刚港钢",
+      gao: "高告搞稿", ge: "个各歌哥格", gei: "给", gen: "跟根", geng: "更耿",
+      gong: "工公功共宫", gou: "够狗购沟", gu: "古故顾姑", gua: "挂刮瓜", guai: "怪乖",
+      guan: "关管馆观", guang: "光广逛", gui: "贵归鬼规", gun: "滚棍", guo: "国过果锅",
+      ha: "哈", hai: "还海害孩", han: "汉喊寒汗", hang: "行航", hao: "好号浩",
+      he: "和喝河何合", hei: "黑嘿", hen: "很恨狠", heng: "横恒", hong: "红轰宏",
+      hou: "后候厚猴", hu: "胡户湖呼护", hua: "话花华画", huai: "坏怀", huan: "换还欢环",
+      huang: "黄慌皇", hui: "会回灰汇", hun: "混婚魂", huo: "或火活货", ji: "机几及己记级",
+      jia: "家加价假架", jian: "见间件简建", jiang: "讲将江奖", jiao: "叫教交脚角",
+      jie: "解姐接街节", jin: "进近今金仅", jing: "经京精静竟", jiong: "窘", jiu: "就九久酒",
+      ju: "句局举据居", juan: "卷捐圈", jue: "觉决绝", jun: "军君均", ka: "卡",
+      kai: "开凯", kan: "看砍刊", kang: "康抗", kao: "考靠烤", ke: "可课客科渴",
+      ken: "肯啃", keng: "坑", kong: "空恐孔", kou: "口扣", ku: "苦哭库酷",
+      kua: "夸跨", kuai: "快块筷", kuan: "款宽", kuang: "况矿狂", kui: "亏愧葵",
+      kun: "困昆", kuo: "阔括", la: "拉啦辣", lai: "来赖", lan: "蓝兰烂懒",
+      lang: "浪郎狼", lao: "老劳捞", le: "了乐", lei: "类累泪雷", leng: "冷",
+      li: "里理力离李立", lia: "俩", lian: "连脸练联", liang: "两量亮良", liao: "了聊料",
+      lie: "列烈裂", lin: "林临邻", ling: "零另令灵", liu: "六留流刘", lo: "咯",
+      long: "龙隆弄", lou: "楼漏", lu: "路录陆露", luan: "乱卵", lun: "论轮",
+      luo: "罗落洛", lv: "绿旅律吕", lve: "略", ma: "吗妈马嘛麻", mai: "买卖麦",
+      man: "慢满曼", mang: "忙芒", mao: "猫毛冒帽", me: "么", mei: "没美每妹",
+      men: "们门闷", meng: "梦蒙猛", mi: "米迷密", mian: "面免棉", miao: "秒苗妙",
+      mie: "灭", min: "民敏", ming: "名明命", miu: "谬", mo: "摸末莫魔", mou: "某",
+      mu: "目木母亩", na: "那拿哪", nai: "奶乃耐", nan: "难南男", nang: "囊",
+      nao: "脑闹恼", ne: "呢", nei: "内哪", nen: "嫩", neng: "能", ni: "你尼呢",
+      nian: "年念粘", niang: "娘酿", niao: "鸟尿", nie: "捏聂", nin: "您", ning: "宁",
+      niu: "牛扭纽", nong: "农浓弄", nu: "努怒奴", nuan: "暖", nuo: "诺挪", nv: "女",
+      o: "哦噢", ou: "欧偶呕", pa: "怕爬趴", pai: "排牌拍派", pan: "盘盼判",
+      pang: "旁胖", pao: "跑泡炮", pei: "陪配赔", pen: "喷盆", peng: "朋碰棚",
+      pi: "皮批匹披", pian: "片篇偏", piao: "票漂飘", pie: "撇", pin: "品拼贫",
+      ping: "平评瓶", po: "破坡婆", pou: "剖", pu: "普铺扑葡", qi: "起气七期其",
+      qia: "恰卡", qian: "钱前千签浅", qiang: "强墙枪", qiao: "桥巧敲", qie: "切且",
+      qin: "亲琴勤", qing: "请清情青轻晴庆倾卿", qiong: "穷", qiu: "求球秋", qu: "去取区曲",
+      quan: "全权圈", que: "却确缺", qun: "群裙", ran: "然染燃", rang: "让嚷",
+      rao: "绕饶", re: "热惹", ren: "人认任仁", reng: "仍扔", ri: "日", rong: "容荣融",
+      rou: "肉柔", ru: "如入乳", ruan: "软", rui: "瑞锐", run: "润", ruo: "若弱",
+      sa: "撒洒", sai: "赛塞", san: "三散伞", sang: "桑嗓", sao: "扫嫂", se: "色涩",
+      sen: "森", seng: "僧", sha: "杀沙傻啥", shai: "晒筛", shan: "山善闪衫",
+      shang: "上商伤尚", shao: "少烧稍绍", she: "社设蛇舍", shen: "什身深神",
+      sheng: "生声省胜", shi: "是时十事市", shou: "手受收首", shu: "书数树熟",
+      shua: "刷耍", shuai: "帅摔", shuan: "栓", shuang: "双爽", shui: "水谁睡税",
+      shun: "顺瞬", shuo: "说硕", si: "四思死斯", song: "送松宋", sou: "搜艘",
+      su: "素速苏", suan: "算酸", sui: "岁随碎", sun: "孙损", suo: "所锁索",
+      ta: "他她它塔踏", tai: "太台抬态", tan: "谈弹坦叹", tang: "堂糖汤唐",
+      tao: "套讨桃逃", te: "特", teng: "疼腾", ti: "题体提替", tian: "天田填甜",
+      tiao: "条跳调", tie: "铁贴", ting: "听停挺厅", tong: "同通痛童", tou: "头投偷",
+      tu: "土图突吐", tuan: "团", tui: "退推腿", tun: "吞屯", tuo: "托脱拖",
+      wa: "哇挖娃", wai: "外歪", wan: "完晚万玩", wang: "王网往忘旺望亡枉", wei: "为位喂微围未维卫",
+      wen: "文问闻温", weng: "翁", wo: "我握窝", wu: "无五物屋", xi: "西洗系喜息",
+      xia: "下夏吓虾", xian: "先现线县显", xiang: "想向象香", xiao: "小笑校晓",
+      xie: "写谢些鞋", xin: "新心信辛欣芯薪馨", xing: "行星性姓", xiong: "兄胸雄", xiu: "修秀休",
+      xu: "需许徐续", xuan: "选宣玄", xue: "学雪血", xun: "寻训讯", ya: "呀亚牙",
+      yan: "眼言演烟严", yang: "样羊阳养", yao: "要药摇腰", ye: "也夜业叶",
+      yi: "一以已意衣", yin: "因音银引", ying: "英影应硬", yo: "哟", yong: "用永拥",
+      you: "有又由友", yu: "于与语雨鱼", yuan: "元远员园", yue: "月越约乐",
+      yun: "云运晕", za: "杂砸", zai: "在再载", zan: "咱赞暂攒簪昝瓒", zang: "脏葬",
+      zao: "早造遭", ze: "则责泽", zei: "贼", zen: "怎", zeng: "曾增", zha: "找炸扎",
+      zhai: "摘窄债", zhan: "站战展占", zhang: "张章长掌", zhao: "找照赵招",
+      zhe: "这着者折", zhen: "真阵镇针", zheng: "正整证争", zhi: "之只知直",
+      zhong: "中种重众", zhou: "周州粥", zhu: "主住猪祝", zhua: "抓", zhuai: "拽",
+      zhuan: "转专赚", zhuang: "装状庄", zhui: "追坠", zhun: "准", zhuo: "桌着捉",
+      zi: "子字自资", zong: "总宗", zou: "走奏", zu: "组足族", zuan: "钻", zui: "最嘴罪",
+      zun: "尊", zuo: "做作坐左"
+    };
+
+    const punctuation = {
+      ".": "。", ",": "，", "?": "？", "!": "！", ";": "；", ":": "：",
+      "(": "（", ")": "）", "[": "【", "]": "】"
+    };
+
+    const samples = ["nihao", "weixin", "xiazai", "dianzan", "zhongwen", "shengrikuaile", "nijiaoshenmemingzi"];
+    const input = document.getElementById("pinyinInput");
+    const output = document.getElementById("outputText");
+    const candidateList = document.getElementById("candidateList");
+    const candidateHint = document.getElementById("candidateHint");
+    const sampleList = document.getElementById("sampleList");
+    const commitBtn = document.getElementById("commitBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const undoBtn = document.getElementById("undoBtn");
+
+    let activeCandidates = [];
+
+    function normalize(text) {
+      return text.toLowerCase().replace(/ü/g, "v").replace(/[^a-zv ]/g, "").replace(/\s+/g, " ").trim();
+    }
+
+    function compact(text) {
+      return normalize(text).replace(/\s/g, "");
+    }
+
+    function segmentPinyin(raw) {
+      const text = compact(raw);
+      const keys = Object.keys(syllables).sort((a, b) => b.length - a.length);
+      const parts = [];
+      let index = 0;
+      while (index < text.length) {
+        const found = keys.find(key => text.startsWith(key, index));
+        if (!found) return null;
+        parts.push(found);
+        index += found.length;
+      }
+      return parts;
+    }
+
+    function buildSyllableCandidates(parts) {
+      if (!parts || !parts.length || !parts.every(part => syllables[part])) return [];
+      const pools = parts.map(part => syllables[part].split("").slice(0, 9));
+      const results = [];
+      const add = candidate => {
+        if (candidate && !results.includes(candidate)) results.push(candidate);
+      };
+
+      for (let offset = 0; results.length < 9 && offset < 9; offset++) {
+        add(pools.map(pool => pool[offset % pool.length]).join(""));
+      }
+
+      for (let syllableIndex = 0; results.length < 9 && syllableIndex < pools.length; syllableIndex++) {
+        for (let charIndex = 1; results.length < 9 && charIndex < pools[syllableIndex].length; charIndex++) {
+          const candidate = pools.map((pool, index) => index === syllableIndex ? pool[charIndex] : pool[0]).join("");
+          add(candidate);
+        }
+      }
+
+      const walk = (index, chars) => {
+        if (results.length >= 9) return;
+        if (index === pools.length) {
+          add(chars.join(""));
+          return;
+        }
+        pools[index].forEach(char => walk(index + 1, [...chars, char]));
+      };
+      walk(0, []);
+
+      if (parts.length === 1) pools[0].forEach(add);
+      return results;
+    }
+
+    function candidatesFor(raw) {
+      const spaced = normalize(raw);
+      const joined = compact(raw);
+      if (!joined) return [];
+
+      const phraseHits = [
+        ...(phraseMap[spaced] || []),
+        ...(phraseMap[joined] || [])
+      ];
+
+      const parts = raw.includes(" ")
+        ? normalize(raw).split(" ").filter(Boolean)
+        : segmentPinyin(raw);
+
+      const bySyllable = buildSyllableCandidates(parts);
+
+      return [...new Set([...phraseHits, ...bySyllable])].slice(0, 9);
+    }
+
+    function renderCandidates() {
+      activeCandidates = candidatesFor(input.value);
+      candidateList.innerHTML = "";
+
+      activeCandidates.forEach((candidate, index) => {
+        const button = document.createElement("button");
+        button.className = "candidate";
+        button.type = "button";
+        button.innerHTML = `<span>${index + 1}</span>${candidate}`;
+        button.addEventListener("click", () => commit(candidate));
+        candidateList.appendChild(button);
+      });
+
+      if (!input.value.trim()) {
+        candidateHint.textContent = "Start typing pinyin to see Chinese candidates.";
+      } else if (activeCandidates.length) {
+        candidateHint.textContent = "Press Space for the first candidate, or press a number to choose.";
+      } else {
+        candidateHint.textContent = "No direct match yet. Add a space between syllables, or press Enter to keep the typed text.";
+      }
+    }
+
+    function insertAtCursor(text) {
+      const start = output.selectionStart ?? output.value.length;
+      const end = output.selectionEnd ?? output.value.length;
+      output.value = output.value.slice(0, start) + text + output.value.slice(end);
+      const next = start + text.length;
+      output.setSelectionRange(next, next);
+    }
+
+    function commit(text = activeCandidates[0] || input.value) {
+      if (!text) return;
+      insertAtCursor(text);
+      input.value = "";
+      renderCandidates();
+      input.focus();
+    }
+
+    function removeLastOutputChar() {
+      const start = output.selectionStart ?? output.value.length;
+      const end = output.selectionEnd ?? output.value.length;
+      if (start !== end) {
+        output.value = output.value.slice(0, start) + output.value.slice(end);
+        output.setSelectionRange(start, start);
+        return;
+      }
+      if (start > 0) {
+        output.value = output.value.slice(0, start - 1) + output.value.slice(start);
+        output.setSelectionRange(start - 1, start - 1);
+      }
+    }
+
+    input.addEventListener("input", renderCandidates);
+
+    input.addEventListener("keydown", event => {
+      const key = event.key;
+      if (key === " " && input.value.trim()) {
+        event.preventDefault();
+        commit();
+        return;
+      }
+
+      if (/^[1-9]$/.test(key) && activeCandidates[Number(key) - 1]) {
+        event.preventDefault();
+        commit(activeCandidates[Number(key) - 1]);
+        return;
+      }
+
+      if (key === "Enter") {
+        event.preventDefault();
+        commit();
+        return;
+      }
+
+      if (key === "Backspace" && !input.value) {
+        event.preventDefault();
+        removeLastOutputChar();
+        return;
+      }
+
+      if (punctuation[key]) {
+        event.preventDefault();
+        if (input.value.trim()) commit();
+        insertAtCursor(punctuation[key]);
+      }
+    });
+
+    commitBtn.addEventListener("click", () => commit());
+    clearBtn.addEventListener("click", () => {
+      input.value = "";
+      output.value = "";
+      renderCandidates();
+      input.focus();
+    });
+    undoBtn.addEventListener("click", () => {
+      removeLastOutputChar();
+      input.focus();
+    });
+    copyBtn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(output.value);
+      copyBtn.textContent = "✓";
+      setTimeout(() => { copyBtn.textContent = "⧉"; }, 900);
+      input.focus();
+    });
+
+    samples.forEach(sample => {
+      const button = document.createElement("button");
+      button.className = "sample";
+      button.type = "button";
+      button.textContent = sample;
+      button.addEventListener("click", () => {
+        input.value = sample;
+        renderCandidates();
+        input.focus();
+      });
+      sampleList.appendChild(button);
+    });
+
+    renderCandidates();
+    input.focus();
+  </script>
+</body>
+</html>
