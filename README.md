@@ -1,6 +1,7 @@
 # Type Chinese
 
 A small frontend-only website for typing Chinese with pinyin candidates.
+It includes a Netlify Forms feedback form for collecting missing words, wrong candidates, bugs, and ideas after deployment.
 
 Project folder:
 

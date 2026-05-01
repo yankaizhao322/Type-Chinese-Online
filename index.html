@@ -32,7 +32,7 @@
         var(--paper);
     }
 
-    button, textarea, input {
+    button, textarea, input, select {
       font: inherit;
     }
 
@@ -292,6 +292,54 @@
       padding-left: 18px;
     }
 
+    .feedback-form {
+      display: grid;
+      gap: 9px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .feedback-form input,
+    .feedback-form select,
+    .feedback-form textarea {
+      width: 100%;
+      border: 1px solid #c8d5d1;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      padding: 9px 10px;
+      font-size: 14px;
+    }
+
+    .feedback-form textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .feedback-form input:focus,
+    .feedback-form select:focus,
+    .feedback-form textarea:focus {
+      border-color: #86bfb7;
+      box-shadow: 0 0 0 3px rgba(8, 123, 115, 0.12);
+    }
+
+    .feedback-status {
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .hidden-field {
+      display: none;
+    }
+
     .kbd {
       display: inline-block;
       min-width: 22px;
@@ -348,6 +396,10 @@
       }
 
       .pinyin-line {
+        grid-template-columns: 1fr;
+      }
+
+      .form-grid {
         grid-template-columns: 1fr;
       }
 
@@ -409,6 +461,47 @@
           <h2>Try these</h2>
           <div class="samples" id="sampleList"></div>
           <div class="mark">Tip: phrases like <b>nihao</b>, <b>weixin</b>, <b>xiazai</b>, and <b>zhongwen</b> are recognized first. The app fills up to nine candidates when possible.</div>
+        </section>
+
+        <section class="section">
+          <h2>Feedback</h2>
+          <form class="feedback-form" id="feedbackForm" name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="feedback">
+            <p class="hidden-field">
+              <label>Leave this blank <input name="bot-field"></label>
+            </p>
+            <div class="form-grid">
+              <label>
+                <span class="label">Rating</span>
+                <select name="rating" required>
+                  <option value="5">5 - Great</option>
+                  <option value="4">4 - Good</option>
+                  <option value="3">3 - Okay</option>
+                  <option value="2">2 - Hard to use</option>
+                  <option value="1">1 - Broken</option>
+                </select>
+              </label>
+              <label>
+                <span class="label">Type</span>
+                <select name="type" required>
+                  <option value="missing-word">Missing word</option>
+                  <option value="wrong-candidate">Wrong candidate</option>
+                  <option value="bug">Bug</option>
+                  <option value="idea">Idea</option>
+                </select>
+              </label>
+            </div>
+            <label>
+              <span class="label">Message</span>
+              <textarea name="message" required placeholder="Tell me what pinyin or word should work better."></textarea>
+            </label>
+            <label>
+              <span class="label">Contact optional</span>
+              <input name="contact" type="text" autocomplete="off" placeholder="Email or GitHub username">
+            </label>
+            <button class="text-btn primary" type="submit">Send Feedback</button>
+            <div class="feedback-status" id="feedbackStatus" role="status"></div>
+          </form>
         </section>
 
         <section class="section">
@@ -734,6 +827,8 @@
     const copyBtn = document.getElementById("copyBtn");
     const clearBtn = document.getElementById("clearBtn");
     const undoBtn = document.getElementById("undoBtn");
+    const feedbackForm = document.getElementById("feedbackForm");
+    const feedbackStatus = document.getElementById("feedbackStatus");
 
     let activeCandidates = [];
 
@@ -927,6 +1022,35 @@
         input.focus();
       });
       sampleList.appendChild(button);
+    });
+
+    feedbackForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const localPreview = location.protocol === "file:" ||
+        ["localhost", "127.0.0.1"].includes(location.hostname) ||
+        location.hostname.startsWith("192.168.");
+
+      if (localPreview) {
+        feedbackStatus.textContent = "Feedback collection turns on after deploying this site to Netlify.";
+        return;
+      }
+
+      feedbackStatus.textContent = "Sending...";
+      const body = new URLSearchParams(new FormData(feedbackForm)).toString();
+
+      try {
+        const response = await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body
+        });
+
+        if (!response.ok) throw new Error("Submission failed");
+        feedbackForm.reset();
+        feedbackStatus.textContent = "Thanks. Feedback sent.";
+      } catch (error) {
+        feedbackStatus.textContent = "Could not send here. Deploy on Netlify to collect feedback automatically.";
+      }
     });
 
     renderCandidates();

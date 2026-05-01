@@ -8,6 +8,16 @@ This app is a static website. The whole site is `index.html`, so most static hos
 - Vercel: import this folder/repository. Framework preset: Other. Build command: empty. Output directory: `.`
 - GitHub Pages: push this folder to a repository and enable Pages from the main branch root.
 
+## Feedback collection
+
+The feedback form uses Netlify Forms. Deploy the site on Netlify, then open:
+
+`Site configuration -> Forms`
+
+Submissions will appear under the `feedback` form. No custom backend or database is needed.
+
+On `file://`, `localhost`, and local Wi-Fi previews, the form shows a preview message and does not submit.
+
 ## Use on your Mac without manually running it
 
 Use `install-autostart.command` to create a macOS user LaunchAgent. After that, the local website starts automatically when you log in.
