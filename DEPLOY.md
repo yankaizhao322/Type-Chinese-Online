@@ -4,13 +4,17 @@ This app is a static website. The whole site is `index.html`, so most static hos
 
 ## Easiest online options
 
+- GitHub Pages: this repo includes `.github/workflows/pages.yml`. In GitHub, set Pages source to `GitHub Actions`, then every push to `main` deploys the site.
 - Netlify: drag this folder into Netlify Drop, or connect a Git repository. Publish directory: `.`
 - Vercel: import this folder/repository. Framework preset: Other. Build command: empty. Output directory: `.`
-- GitHub Pages: push this folder to a repository and enable Pages from the main branch root.
+
+Expected GitHub Pages URL:
+
+`https://yankaizhao322.github.io/Type-Chinese-Online/`
 
 ## Feedback collection
 
-The feedback form uses Netlify Forms. Deploy the site on Netlify, then open:
+The feedback form uses Netlify Forms. GitHub Pages can host the app, but it does not store form submissions by itself. To collect feedback without a backend, deploy the same repo on Netlify, then open:
 
 `Site configuration -> Forms`
 

@@ -18,6 +18,7 @@
       --soft: #eaf4f2;
       --mark: #fff4d6;
       --shadow: 0 16px 42px rgba(24, 33, 31, 0.11);
+      --shadow-soft: 0 8px 24px rgba(24, 33, 31, 0.08);
     }
 
     * { box-sizing: border-box; }
@@ -28,7 +29,7 @@
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       color: var(--ink);
       background:
-        linear-gradient(180deg, rgba(8, 123, 115, 0.09), rgba(247, 250, 248, 0) 320px),
+        linear-gradient(180deg, rgba(8, 123, 115, 0.11), rgba(247, 250, 248, 0) 360px),
         var(--paper);
     }
 
@@ -36,33 +37,97 @@
       font: inherit;
     }
 
+    a {
+      color: inherit;
+    }
+
     .app {
-      width: min(1080px, calc(100vw - 28px));
+      width: min(1180px, calc(100vw - 28px));
       margin: 0 auto;
-      padding: 24px 0 36px;
+      padding: 18px 0 36px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      min-height: 48px;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid #cfe4df;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--accent);
+      box-shadow: var(--shadow-soft);
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      border: 1px solid transparent;
+      border-radius: 7px;
+      padding: 8px 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .nav-link:hover {
+      border-color: #cfe4df;
+      background: #fff;
+      color: var(--ink);
     }
 
     header {
-      display: flex;
-      justify-content: space-between;
-      gap: 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 22px;
       align-items: end;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(30px, 5vw, 54px);
+      max-width: 760px;
+      font-size: clamp(38px, 6vw, 72px);
       line-height: 1.02;
       letter-spacing: 0;
     }
 
     .subtitle {
-      margin: 10px 0 0;
-      max-width: 760px;
+      margin: 12px 0 0;
+      max-width: 720px;
       color: var(--muted);
-      line-height: 1.55;
-      font-size: 15px;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
     }
 
     .status {
@@ -78,6 +143,36 @@
       font-size: 14px;
     }
 
+    .live-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: var(--shadow-soft);
+      padding: 14px;
+    }
+
+    .live-card strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    .live-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .live-url {
+      display: block;
+      margin-top: 10px;
+      overflow-wrap: anywhere;
+      color: var(--accent-dark);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
     .dot {
       width: 8px;
       height: 8px;
@@ -87,8 +182,8 @@
 
     .grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(320px, 430px);
-      gap: 12px;
+      grid-template-columns: minmax(0, 1fr) minmax(310px, 390px);
+      gap: 14px;
       align-items: start;
     }
 
@@ -107,10 +202,11 @@
       gap: 12px;
       padding: 12px;
       border-bottom: 1px solid var(--line);
+      background: #fbfdfc;
     }
 
     .head strong {
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .tools {
@@ -141,6 +237,10 @@
       padding: 0 12px;
       font-size: 14px;
       font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .primary {
@@ -164,7 +264,7 @@
     }
 
     .workspace {
-      padding: 14px;
+      padding: 16px;
     }
 
     .label {
@@ -184,14 +284,14 @@
 
     #pinyinInput {
       width: 100%;
-      min-height: 46px;
+      min-height: 52px;
       border: 1px solid #c8d5d1;
       border-radius: 8px;
       padding: 10px 12px;
       outline: none;
       background: #fff;
       color: var(--ink);
-      font-size: 18px;
+      font-size: 20px;
     }
 
     #pinyinInput:focus, #outputText:focus {
@@ -206,7 +306,7 @@
       border: 1px solid #dbe6e2;
       border-radius: 8px;
       background: #fbfdfc;
-      padding: 8px;
+      padding: 10px;
       margin-bottom: 12px;
     }
 
@@ -228,6 +328,7 @@
       padding: 4px 10px;
       cursor: pointer;
       color: #17211f;
+      font-size: 16px;
     }
 
     .candidate:first-child {
@@ -257,7 +358,7 @@
       padding: 14px;
       color: var(--ink);
       background: #fff;
-      font-size: 22px;
+      font-size: 24px;
       line-height: 1.65;
       font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
     }
@@ -267,7 +368,7 @@
     }
 
     .section {
-      padding: 14px;
+      padding: 15px;
       border-top: 1px solid var(--line);
     }
 
@@ -277,7 +378,7 @@
 
     .section h2 {
       margin: 0 0 8px;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .section p, .section li {
@@ -382,13 +483,33 @@
       line-height: 1.45;
     }
 
+    .publish-note {
+      border: 1px solid #cfe4df;
+      border-radius: 8px;
+      background: var(--soft);
+      padding: 10px;
+      color: #174b45;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
     @media (max-width: 880px) {
+      .topbar,
       header {
         display: block;
       }
 
+      .nav-actions {
+        margin-top: 12px;
+      }
+
       .status {
+        margin-top: 10px;
+      }
+
+      .live-card {
         margin-top: 14px;
+      }
       }
 
       .grid {
@@ -411,15 +532,32 @@
 </head>
 <body>
   <main class="app">
+    <nav class="topbar" aria-label="Primary">
+      <div class="brand"><span class="brand-mark">中</span><span>Type Chinese</span></div>
+      <div class="nav-actions">
+        <a class="nav-link" href="#compose">Compose</a>
+        <a class="nav-link" href="#feedback">Feedback</a>
+        <a class="text-btn primary" href="#compose">Start Typing</a>
+      </div>
+    </nav>
+
     <header>
       <div>
         <h1>Type Chinese</h1>
-        <p class="subtitle">Type pinyin, pick a candidate, and build Chinese text in the output box. This is a small frontend-only IME, so it runs locally and can be shared on your Wi-Fi with a simple local server.</p>
+        <p class="subtitle">A clean pinyin typing tool for quick Chinese text. Type pinyin, choose from nine candidates, then copy your output anywhere.</p>
+        <div class="hero-actions">
+          <div class="status"><span class="dot"></span><span>No sign-in required</span></div>
+          <div class="status"><span class="dot"></span><span>Runs in the browser</span></div>
+        </div>
       </div>
-      <div class="status"><span class="dot"></span><span>Frontend only</span></div>
+      <div class="live-card">
+        <strong>Public site</strong>
+        <p>After GitHub Pages is enabled, this will open directly in any browser.</p>
+        <a class="live-url" href="https://yankaizhao322.github.io/Type-Chinese-Online/">yankaizhao322.github.io/Type-Chinese-Online/</a>
+      </div>
     </header>
 
-    <section class="grid" aria-label="Pinyin input app">
+    <section class="grid" id="compose" aria-label="Pinyin input app">
       <div class="pane">
         <div class="head">
           <strong>Compose</strong>
@@ -463,7 +601,7 @@
           <div class="mark">Tip: phrases like <b>nihao</b>, <b>weixin</b>, <b>xiazai</b>, and <b>zhongwen</b> are recognized first. The app fills up to nine candidates when possible.</div>
         </section>
 
-        <section class="section">
+        <section class="section" id="feedback">
           <h2>Feedback</h2>
           <form class="feedback-form" id="feedbackForm" name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field">
             <input type="hidden" name="form-name" value="feedback">
@@ -505,8 +643,8 @@
         </section>
 
         <section class="section">
-          <h2>Share on your Wi-Fi</h2>
-          <p>Double-click <b>start-local.command</b>, then open the printed Network URL on another computer connected to the same Wi-Fi.</p>
+          <h2>Deploy</h2>
+          <div class="publish-note">Best public setup: GitHub Pages for the website, Netlify when you want built-in feedback collection.</div>
         </section>
       </aside>
     </section>
