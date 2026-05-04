@@ -16,7 +16,6 @@
       --accent-dark: #066760;
       --warm: #c94b31;
       --soft: #eaf4f2;
-      --mark: #fff4d6;
       --shadow: 0 16px 42px rgba(24, 33, 31, 0.11);
       --shadow-soft: 0 8px 24px rgba(24, 33, 31, 0.08);
     }
@@ -108,6 +107,11 @@
       color: var(--accent-dark);
     }
 
+    .nav-link.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
     header {
       margin-bottom: 16px;
     }
@@ -128,14 +132,11 @@
       font-size: 16px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(310px, 390px);
-      gap: 14px;
-      align-items: start;
+    .page-view[hidden] {
+      display: none;
     }
 
-    .pane, .side {
+    .pane {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -318,10 +319,6 @@
       font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
     }
 
-    .translator-panel {
-      margin-top: 14px;
-    }
-
     .translation-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -399,39 +396,11 @@
       line-height: 1.4;
     }
 
-    .side {
-      overflow: hidden;
-    }
-
-    .section {
-      padding: 15px;
-      border-top: 1px solid var(--line);
-    }
-
-    .section:first-child {
-      border-top: 0;
-    }
-
-    .section h2 {
-      margin: 0 0 8px;
-      font-size: 16px;
-    }
-
-    .section p, .section li {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.55;
-    }
-
-    .section ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
     .feedback-form {
       display: grid;
-      gap: 9px;
+      gap: 12px;
+      padding: 16px;
+      max-width: 760px;
     }
 
     .form-grid {
@@ -473,52 +442,6 @@
       line-height: 1.4;
     }
 
-    .hidden-field {
-      display: none;
-    }
-
-    .kbd {
-      display: inline-block;
-      min-width: 22px;
-      border: 1px solid #cbd7d4;
-      border-bottom-width: 2px;
-      border-radius: 5px;
-      background: #fff;
-      color: var(--ink);
-      padding: 1px 6px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 12px;
-      text-align: center;
-    }
-
-    .samples {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-    }
-
-    .sample {
-      border: 1px solid #d5dfdc;
-      border-radius: 999px;
-      background: #fff;
-      color: var(--ink);
-      padding: 6px 10px;
-      cursor: pointer;
-      font-size: 13px;
-    }
-
-    .mark {
-      display: inline-block;
-      margin-top: 8px;
-      border: 1px solid #e7d08c;
-      border-radius: 8px;
-      background: var(--mark);
-      color: #604606;
-      padding: 8px 10px;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-
     @media (max-width: 880px) {
       .topbar,
       header {
@@ -534,10 +457,6 @@
       .nav-link {
         min-width: 0;
         padding: 10px 6px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
       }
 
       .pinyin-line,
@@ -564,105 +483,44 @@
     <nav class="topbar" aria-label="Primary">
       <div class="brand"><span class="brand-mark">中</span><span>Type Chinese</span></div>
       <div class="nav-actions">
-        <a class="nav-link" href="#compose">Type</a>
-        <a class="nav-link" href="#translate">Translate</a>
-        <a class="nav-link" href="#feedback">Feedback</a>
+        <a class="nav-link" href="#type" data-page="type">Type Chinese</a>
+        <a class="nav-link" href="#translate" data-page="translate">Translate</a>
+        <a class="nav-link" href="#feedback" data-page="feedback">Feedback</a>
       </div>
     </nav>
 
     <header>
-      <h1>Type Chinese</h1>
-      <p class="subtitle">Type pinyin, choose Chinese candidates, and translate between Chinese and English.</p>
+      <h1 id="pageTitle">Type Chinese</h1>
+      <p class="subtitle" id="pageSubtitle">Type pinyin and choose from Chinese candidates.</p>
     </header>
 
-    <section class="grid" id="compose" aria-label="Pinyin input app">
-      <div class="pane">
-        <div class="head">
-          <strong>Compose</strong>
-          <div class="tools">
-            <button class="icon-btn" id="undoBtn" title="Undo last Chinese character" aria-label="Undo last Chinese character">↶ Undo</button>
-            <button class="icon-btn" id="copyBtn" title="Copy Chinese output" aria-label="Copy Chinese output">⧉ Copy</button>
-            <button class="text-btn" id="clearBtn">Clear</button>
-          </div>
-        </div>
-        <div class="workspace">
-          <label class="label" for="pinyinInput">Pinyin input</label>
-          <div class="pinyin-line">
-            <input id="pinyinInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type nihao, zhongwen, wo ai ni...">
-            <button class="text-btn primary" id="commitBtn">Commit</button>
-          </div>
-
-          <div class="candidate-bar" aria-live="polite">
-            <div class="candidates" id="candidateList"></div>
-            <div class="hint" id="candidateHint">Start typing pinyin to see Chinese candidates.</div>
-          </div>
-
-          <label class="label" for="outputText">Chinese output</label>
-          <textarea id="outputText" placeholder="中文输出..." lang="zh-CN" spellcheck="false"></textarea>
+    <section class="pane page-view" id="typePage" data-page="type" aria-label="Pinyin input app">
+      <div class="head">
+        <strong>Type Chinese</strong>
+        <div class="tools">
+          <button class="icon-btn" id="undoBtn" title="Undo last Chinese character" aria-label="Undo last Chinese character">↶ Undo</button>
+          <button class="icon-btn" id="copyBtn" title="Copy Chinese output" aria-label="Copy Chinese output">⧉ Copy</button>
+          <button class="text-btn" id="clearBtn">Clear</button>
         </div>
       </div>
+      <div class="workspace">
+        <label class="label" for="pinyinInput">Pinyin input</label>
+        <div class="pinyin-line">
+          <input id="pinyinInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type nihao, zhongwen, wo ai ni...">
+          <button class="text-btn primary" id="commitBtn">Commit</button>
+        </div>
 
-      <aside class="side" aria-label="Help">
-        <section class="section">
-          <h2>Keyboard</h2>
-          <ul>
-            <li><span class="kbd">Space</span> commits the first candidate.</li>
-            <li><span class="kbd">1</span> to <span class="kbd">9</span> chooses a candidate.</li>
-            <li><span class="kbd">Enter</span> commits the visible pinyin.</li>
-            <li><span class="kbd">Backspace</span> removes the last Chinese character when the pinyin box is empty.</li>
-          </ul>
-        </section>
+        <div class="candidate-bar" aria-live="polite">
+          <div class="candidates" id="candidateList"></div>
+          <div class="hint" id="candidateHint">Start typing pinyin to see Chinese candidates.</div>
+        </div>
 
-        <section class="section">
-          <h2>Try these</h2>
-          <div class="samples" id="sampleList"></div>
-          <div class="mark">Tip: phrases like <b>nihao</b>, <b>weixin</b>, <b>xiazai</b>, and <b>zhongwen</b> are recognized first. The app fills up to nine candidates when possible.</div>
-        </section>
-
-        <section class="section" id="feedback">
-          <h2>Feedback</h2>
-          <form class="feedback-form" id="feedbackForm" name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-            <input type="hidden" name="form-name" value="feedback">
-            <p class="hidden-field">
-              <label>Leave this blank <input name="bot-field"></label>
-            </p>
-            <div class="form-grid">
-              <label>
-                <span class="label">Rating</span>
-                <select name="rating" required>
-                  <option value="5">5 - Great</option>
-                  <option value="4">4 - Good</option>
-                  <option value="3">3 - Okay</option>
-                  <option value="2">2 - Hard to use</option>
-                  <option value="1">1 - Broken</option>
-                </select>
-              </label>
-              <label>
-                <span class="label">Type</span>
-                <select name="type" required>
-                  <option value="missing-word">Missing word</option>
-                  <option value="wrong-candidate">Wrong candidate</option>
-                  <option value="bug">Bug</option>
-                  <option value="idea">Idea</option>
-                </select>
-              </label>
-            </div>
-            <label>
-              <span class="label">Message</span>
-              <textarea name="message" required placeholder="Tell me what pinyin or word should work better."></textarea>
-            </label>
-            <label>
-              <span class="label">Contact optional</span>
-              <input name="contact" type="text" autocomplete="off" placeholder="Email or GitHub username">
-            </label>
-            <button class="text-btn primary" type="submit">Send Feedback</button>
-            <div class="feedback-status" id="feedbackStatus" role="status"></div>
-          </form>
-        </section>
-      </aside>
+        <label class="label" for="outputText">Chinese output</label>
+        <textarea id="outputText" placeholder="中文输出..." lang="zh-CN" spellcheck="false"></textarea>
+      </div>
     </section>
 
-    <section class="pane translator-panel" id="translate" aria-label="Chinese English translator">
+    <section class="pane page-view" id="translatePage" data-page="translate" aria-label="Chinese English translator" hidden>
       <div class="head">
         <strong>Chinese-English Translator</strong>
         <div class="translate-toolbar">
@@ -693,6 +551,41 @@
           <div class="translation-status" id="translationStatus"></div>
         </div>
       </div>
+    </section>
+
+    <section class="pane page-view" id="feedbackPage" data-page="feedback" aria-label="Feedback form" hidden>
+      <div class="head">
+        <strong>Feedback</strong>
+      </div>
+      <form class="feedback-form" id="feedbackForm">
+        <div class="form-grid">
+          <label>
+            <span class="label">Rating</span>
+            <select name="rating" required>
+              <option value="5">5 - Great</option>
+              <option value="4">4 - Good</option>
+              <option value="3">3 - Okay</option>
+              <option value="2">2 - Hard to use</option>
+              <option value="1">1 - Broken</option>
+            </select>
+          </label>
+          <label>
+            <span class="label">Type</span>
+            <select name="type" required>
+              <option value="missing-word">Missing word</option>
+              <option value="wrong-candidate">Wrong candidate</option>
+              <option value="bug">Bug</option>
+              <option value="idea">Idea</option>
+            </select>
+          </label>
+        </div>
+        <label>
+          <span class="label">Message</span>
+          <textarea name="message" required placeholder="Tell me what pinyin or word should work better."></textarea>
+        </label>
+        <button class="text-btn primary" type="submit">Send Feedback</button>
+        <div class="feedback-status" id="feedbackStatus" role="status"></div>
+      </form>
     </section>
   </main>
 
@@ -1001,12 +894,10 @@
       "(": "（", ")": "）", "[": "【", "]": "】"
     };
 
-    const samples = ["nihao", "weixin", "xiazai", "dianzan", "zhongwen", "shengrikuaile", "nijiaoshenmemingzi"];
     const input = document.getElementById("pinyinInput");
     const output = document.getElementById("outputText");
     const candidateList = document.getElementById("candidateList");
     const candidateHint = document.getElementById("candidateHint");
-    const sampleList = document.getElementById("sampleList");
     const commitBtn = document.getElementById("commitBtn");
     const copyBtn = document.getElementById("copyBtn");
     const clearBtn = document.getElementById("clearBtn");
@@ -1021,9 +912,49 @@
     const copyTranslationBtn = document.getElementById("copyTranslationBtn");
     const sentenceAnalysis = document.getElementById("sentenceAnalysis");
     const translationStatus = document.getElementById("translationStatus");
+    const pageTitle = document.getElementById("pageTitle");
+    const pageSubtitle = document.getElementById("pageSubtitle");
+    const pageViews = Array.from(document.querySelectorAll(".page-view"));
+    const navLinks = Array.from(document.querySelectorAll(".nav-link"));
 
     let activeCandidates = [];
     const translatorCache = new Map();
+
+    const pageCopy = {
+      type: {
+        title: "Type Chinese",
+        subtitle: "Type pinyin and choose from Chinese candidates."
+      },
+      translate: {
+        title: "Translate",
+        subtitle: "Translate between English and Chinese, with clause support for long sentences."
+      },
+      feedback: {
+        title: "Feedback",
+        subtitle: "Report a missing word, wrong candidate, bug, or idea."
+      }
+    };
+
+    function activePage() {
+      const page = location.hash.replace("#", "") || "type";
+      return pageCopy[page] ? page : "type";
+    }
+
+    function renderPage() {
+      const page = activePage();
+      pageViews.forEach(view => {
+        view.hidden = view.dataset.page !== page;
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle("active", link.dataset.page === page);
+        link.setAttribute("aria-current", link.dataset.page === page ? "page" : "false");
+      });
+      pageTitle.textContent = pageCopy[page].title;
+      pageSubtitle.textContent = pageCopy[page].subtitle;
+
+      if (page === "type") input.focus();
+      if (page === "translate") translateInput.focus();
+    }
 
     const enZhTerms = {
       "artificial intelligence": "人工智能",
@@ -1489,50 +1420,30 @@
       setTimeout(() => { copyTranslationBtn.textContent = "⧉ Copy"; }, 900);
     });
 
-    samples.forEach(sample => {
-      const button = document.createElement("button");
-      button.className = "sample";
-      button.type = "button";
-      button.textContent = sample;
-      button.addEventListener("click", () => {
-        input.value = sample;
-        renderCandidates();
-        input.focus();
-      });
-      sampleList.appendChild(button);
-    });
-
     feedbackForm.addEventListener("submit", async event => {
       event.preventDefault();
-      const localPreview = location.protocol === "file:" ||
-        ["localhost", "127.0.0.1"].includes(location.hostname) ||
-        location.hostname.startsWith("192.168.");
-
-      if (localPreview) {
-        feedbackStatus.textContent = "Feedback collection turns on after deploying this site to Netlify.";
-        return;
-      }
-
-      feedbackStatus.textContent = "Sending...";
-      const body = new URLSearchParams(new FormData(feedbackForm)).toString();
-
-      try {
-        const response = await fetch("/", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body
-        });
-
-        if (!response.ok) throw new Error("Submission failed");
-        feedbackForm.reset();
-        feedbackStatus.textContent = "Thanks. Feedback sent.";
-      } catch (error) {
-        feedbackStatus.textContent = "Could not send here. Deploy on Netlify to collect feedback automatically.";
-      }
+      const data = new FormData(feedbackForm);
+      const rating = data.get("rating");
+      const type = data.get("type");
+      const message = data.get("message");
+      const title = `[Feedback] ${type}`;
+      const body = [
+        `Rating: ${rating}/5`,
+        `Type: ${type}`,
+        "",
+        message
+      ].join("\n");
+      const url = new URL("https://github.com/yankaizhao322/Type-Chinese-Online/issues/new");
+      url.searchParams.set("title", title);
+      url.searchParams.set("body", body);
+      url.searchParams.set("labels", "feedback");
+      window.open(url.toString(), "_blank", "noopener,noreferrer");
+      feedbackStatus.textContent = "Opened a GitHub issue draft for this feedback.";
     });
 
     renderCandidates();
-    input.focus();
+    window.addEventListener("hashchange", renderPage);
+    renderPage();
   </script>
 </body>
 </html>
