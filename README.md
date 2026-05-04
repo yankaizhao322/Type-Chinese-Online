@@ -1,6 +1,5 @@
-# Type Chinese
 
-A small frontend-only website for typing Chinese with pinyin candidates and Chinese-English translation.
+A website for typing Chinese with pinyin candidates and Chinese-English translation.
 It includes a Netlify Forms feedback form for collecting missing words, wrong candidates, bugs, and ideas after deployment.
 
 The translator prioritizes supported browser translation APIs for full-sentence translation and falls back to local term-based drafts with long-sentence clause breakdowns.
@@ -34,7 +33,3 @@ Open `index.html` directly in a browser, or double-click `start-local.command`.
 - Press Backspace with an empty pinyin box to delete the last Chinese character.
 
 Everything runs in the browser. No API key or build step is needed.
-
-## Deploy
-
-See `DEPLOY.md`.
