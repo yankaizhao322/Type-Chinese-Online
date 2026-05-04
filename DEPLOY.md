@@ -2,9 +2,11 @@
 
 This app is a static website. The whole site is `index.html`, so most static hosts can deploy it without a build step.
 
+The Chinese-English translator is frontend-only. In browsers that expose a translation API, it can translate full sentences directly in the browser. Other browsers get a local term-based draft plus clause breakdown for long sentence understanding.
+
 ## Easiest online options
 
-- GitHub Pages: this repo includes `.github/workflows/pages.yml`. In GitHub, set Pages source to `GitHub Actions`, then every push to `main` deploys the site.
+- GitHub Pages: this repo publishes from the `gh-pages` branch root.
 - Netlify: drag this folder into Netlify Drop, or connect a Git repository. Publish directory: `.`
 - Vercel: import this folder/repository. Framework preset: Other. Build command: empty. Output directory: `.`
 

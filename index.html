@@ -294,7 +294,7 @@
       font-size: 20px;
     }
 
-    #pinyinInput:focus, #outputText:focus {
+    #pinyinInput:focus, #outputText:focus, #translateInput:focus, #translateOutput:focus {
       border-color: #86bfb7;
       box-shadow: 0 0 0 3px rgba(8, 123, 115, 0.12);
     }
@@ -361,6 +361,87 @@
       font-size: 24px;
       line-height: 1.65;
       font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .translator-panel {
+      margin-top: 14px;
+    }
+
+    .translation-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .translate-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .translate-toolbar select {
+      min-height: 38px;
+      border: 1px solid #c8d5d1;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--ink);
+      padding: 0 10px;
+      outline: none;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    #translateInput,
+    #translateOutput {
+      width: 100%;
+      min-height: 260px;
+      resize: vertical;
+      border: 1px solid #c8d5d1;
+      border-radius: 8px;
+      outline: none;
+      padding: 13px;
+      color: var(--ink);
+      background: #fff;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    #translateOutput {
+      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    .analysis-box {
+      grid-column: 1 / -1;
+      border: 1px solid #dbe6e2;
+      border-radius: 8px;
+      background: #fbfdfc;
+      padding: 12px;
+    }
+
+    .analysis-box h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+    }
+
+    .analysis-box ol {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .analysis-box li + li {
+      margin-top: 5px;
+    }
+
+    .translation-status {
+      min-height: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
     }
 
     .side {
@@ -510,14 +591,18 @@
       .live-card {
         margin-top: 14px;
       }
-      }
 
       .grid {
         grid-template-columns: 1fr;
       }
 
-      .pinyin-line {
+      .pinyin-line,
+      .translation-grid {
         grid-template-columns: 1fr;
+      }
+
+      .analysis-box {
+        grid-column: auto;
       }
 
       .form-grid {
@@ -536,6 +621,7 @@
       <div class="brand"><span class="brand-mark">中</span><span>Type Chinese</span></div>
       <div class="nav-actions">
         <a class="nav-link" href="#compose">Compose</a>
+        <a class="nav-link" href="#translate">Translate</a>
         <a class="nav-link" href="#feedback">Feedback</a>
         <a class="text-btn primary" href="#compose">Start Typing</a>
       </div>
@@ -544,10 +630,11 @@
     <header>
       <div>
         <h1>Type Chinese</h1>
-        <p class="subtitle">A clean pinyin typing tool for quick Chinese text. Type pinyin, choose from nine candidates, then copy your output anywhere.</p>
+        <p class="subtitle">A clean pinyin typing and Chinese-English translation tool. Type pinyin, choose from nine candidates, translate long sentences, then copy your output anywhere.</p>
         <div class="hero-actions">
           <div class="status"><span class="dot"></span><span>No sign-in required</span></div>
           <div class="status"><span class="dot"></span><span>Runs in the browser</span></div>
+          <div class="status"><span class="dot"></span><span>Chinese-English translator</span></div>
         </div>
       </div>
       <div class="live-card">
@@ -647,6 +734,39 @@
           <div class="publish-note">Best public setup: GitHub Pages for the website, Netlify when you want built-in feedback collection.</div>
         </section>
       </aside>
+    </section>
+
+    <section class="pane translator-panel" id="translate" aria-label="Chinese English translator">
+      <div class="head">
+        <strong>Chinese-English Translator</strong>
+        <div class="translate-toolbar">
+          <select id="translateDirection" aria-label="Translation direction">
+            <option value="en-zh">English to Chinese</option>
+            <option value="zh-en">Chinese to English</option>
+            <option value="auto">Auto detect</option>
+          </select>
+          <button class="icon-btn" id="swapTranslateBtn" title="Swap translation direction" aria-label="Swap translation direction">⇄</button>
+          <button class="icon-btn" id="copyTranslationBtn" title="Copy translation" aria-label="Copy translation">⧉</button>
+          <button class="text-btn primary" id="translateBtn">Translate</button>
+        </div>
+      </div>
+      <div class="translation-grid">
+        <label>
+          <span class="label">Source text</span>
+          <textarea id="translateInput" placeholder="Paste a long English or Chinese sentence here..." spellcheck="true"></textarea>
+        </label>
+        <label>
+          <span class="label">Translation</span>
+          <textarea id="translateOutput" placeholder="译文 / Translation..." readonly></textarea>
+        </label>
+        <div class="analysis-box">
+          <h3>Long sentence support</h3>
+          <ol id="sentenceAnalysis">
+            <li>Paste a long sentence, then translate. The app will split clauses and preserve sentence order.</li>
+          </ol>
+          <div class="translation-status" id="translationStatus"></div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -967,8 +1087,144 @@
     const undoBtn = document.getElementById("undoBtn");
     const feedbackForm = document.getElementById("feedbackForm");
     const feedbackStatus = document.getElementById("feedbackStatus");
+    const translateDirection = document.getElementById("translateDirection");
+    const translateInput = document.getElementById("translateInput");
+    const translateOutput = document.getElementById("translateOutput");
+    const translateBtn = document.getElementById("translateBtn");
+    const swapTranslateBtn = document.getElementById("swapTranslateBtn");
+    const copyTranslationBtn = document.getElementById("copyTranslationBtn");
+    const sentenceAnalysis = document.getElementById("sentenceAnalysis");
+    const translationStatus = document.getElementById("translationStatus");
 
     let activeCandidates = [];
+    const translatorCache = new Map();
+
+    const enZhTerms = {
+      "artificial intelligence": "人工智能",
+      "machine learning": "机器学习",
+      "deep learning": "深度学习",
+      "neural network": "神经网络",
+      "large language model": "大语言模型",
+      "language model": "语言模型",
+      "data mining": "数据挖掘",
+      "computer science": "计算机科学",
+      "user interface": "用户界面",
+      "feedback": "反馈",
+      "translation": "翻译",
+      "translate": "翻译",
+      "sentence": "句子",
+      "complex sentence": "复杂句",
+      "long sentence": "长句",
+      "long": "长",
+      "short": "短",
+      "clause": "从句",
+      "clauses": "从句",
+      "split": "拆分",
+      "meaning": "意思",
+      "depends on": "取决于",
+      "structure": "结构",
+      "context": "上下文",
+      "preserve": "保留",
+      "order": "顺序",
+      "because": "因为",
+      "although": "虽然",
+      "but": "但是",
+      "however": "然而",
+      "therefore": "因此",
+      "if": "如果",
+      "when": "当",
+      "while": "当/然而",
+      "which": "其/哪个",
+      "that": "那/该",
+      "this": "这个",
+      "these": "这些",
+      "those": "那些",
+      "the": "",
+      "a": "一个",
+      "an": "一个",
+      "I": "我",
+      "you": "你",
+      "we": "我们",
+      "they": "他们",
+      "it": "它",
+      "its": "它的",
+      "and": "和",
+      "is": "是",
+      "are": "是",
+      "was": "曾是",
+      "were": "曾是",
+      "can": "可以",
+      "could": "可以/能够",
+      "should": "应该",
+      "must": "必须",
+      "need": "需要",
+      "understand": "理解",
+      "support": "支持",
+      "build": "构建",
+      "deploy": "部署",
+      "browser": "浏览器",
+      "website": "网站",
+      "Chinese": "中文",
+      "English": "英文"
+    };
+
+    const zhEnTerms = {
+      "人工智能": "artificial intelligence",
+      "机器学习": "machine learning",
+      "深度学习": "deep learning",
+      "神经网络": "neural network",
+      "大语言模型": "large language model",
+      "数据挖掘": "data mining",
+      "计算机科学": "computer science",
+      "用户界面": "user interface",
+      "反馈": "feedback",
+      "翻译": "translation",
+      "复杂句": "complex sentence",
+      "长句": "long sentence",
+      "长": "long",
+      "短": "short",
+      "从句": "clause",
+      "拆分": "split",
+      "意思": "meaning",
+      "取决于": "depends on",
+      "结构": "structure",
+      "上下文": "context",
+      "保留": "preserve",
+      "顺序": "order",
+      "因为": "because",
+      "虽然": "although",
+      "但是": "but",
+      "然而": "however",
+      "因此": "therefore",
+      "如果": "if",
+      "当": "when",
+      "这个": "this",
+      "这些": "these",
+      "那些": "those",
+      "我": "I",
+      "你": "you",
+      "我们": "we",
+      "他们": "they",
+      "它": "it",
+      "它的": "its",
+      "这个": "this",
+      "句子": "sentence",
+      "很": "very",
+      "和": "and",
+      "是": "is",
+      "可以": "can",
+      "应该": "should",
+      "必须": "must",
+      "需要": "need",
+      "理解": "understand",
+      "支持": "support",
+      "构建": "build",
+      "部署": "deploy",
+      "浏览器": "browser",
+      "网站": "website",
+      "中文": "Chinese",
+      "英文": "English"
+    };
 
     function normalize(text) {
       return text.toLowerCase().replace(/ü/g, "v").replace(/[^a-zv ]/g, "").replace(/\s+/g, " ").trim();
@@ -1096,6 +1352,144 @@
       }
     }
 
+    function detectTranslateDirection(text) {
+      if (translateDirection.value !== "auto") return translateDirection.value;
+      return /[\u3400-\u9fff]/.test(text) ? "zh-en" : "en-zh";
+    }
+
+    function splitLongSentence(text) {
+      return text
+        .replace(/\s+/g, " ")
+        .split(/(?<=[。！？.!?;；])\s+|(?<=[,，;；])\s+|\n+/)
+        .map(part => part.trim())
+        .filter(Boolean);
+    }
+
+    function renderSentenceAnalysis(text, direction) {
+      const parts = splitLongSentence(text);
+      sentenceAnalysis.innerHTML = "";
+      const hints = parts.length ? parts : [text.trim()].filter(Boolean);
+
+      hints.slice(0, 10).forEach((part, index) => {
+        const item = document.createElement("li");
+        const role = index === 0
+          ? "Main idea"
+          : /because|因为|since|由于/i.test(part)
+            ? "Reason"
+            : /although|though|虽然|despite/i.test(part)
+              ? "Contrast"
+              : /if|如果|unless/i.test(part)
+                ? "Condition"
+                : "Clause";
+        item.textContent = `${role}: ${part}`;
+        sentenceAnalysis.appendChild(item);
+      });
+
+      if (!hints.length) {
+        const item = document.createElement("li");
+        item.textContent = "Paste a long sentence, then translate. The app will split clauses and preserve sentence order.";
+        sentenceAnalysis.appendChild(item);
+      }
+
+      translateOutput.lang = direction === "en-zh" ? "zh-CN" : "en";
+    }
+
+    function localTermDraft(text, direction) {
+      const map = direction === "en-zh" ? enZhTerms : zhEnTerms;
+      let draft = text;
+      Object.entries(map)
+        .sort((a, b) => b[0].length - a[0].length)
+        .forEach(([source, target]) => {
+          const escaped = source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const pattern = direction === "en-zh"
+            ? new RegExp(`\\b${escaped}\\b`, "gi")
+            : new RegExp(escaped, "g");
+          draft = draft.replace(pattern, direction === "zh-en" ? ` ${target} ` : target);
+        });
+
+      if (direction === "en-zh") {
+        draft = draft
+          .replace(/\./g, "。")
+          .replace(/,/g, "，")
+          .replace(/\?/g, "？")
+          .replace(/!/g, "！");
+      } else {
+        draft = draft
+          .replace(/([A-Za-z])([\u3400-\u9fff])/g, "$1 $2")
+          .replace(/([\u3400-\u9fff])([A-Za-z])/g, "$1 $2")
+          .replace(/，/g, ", ")
+          .replace(/。/g, ".")
+          .replace(/；/g, "; ")
+          .replace(/！/g, "!")
+          .replace(/？/g, "?")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      return draft;
+    }
+
+    function withTimeout(promise, timeoutMs, label) {
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+          setTimeout(() => reject(new Error(`${label} timed out`)), timeoutMs);
+        })
+      ]);
+    }
+
+    async function getBrowserTranslator(sourceLanguage, targetLanguage) {
+      const cacheKey = `${sourceLanguage}-${targetLanguage}`;
+      if (translatorCache.has(cacheKey)) return translatorCache.get(cacheKey);
+
+      const translatorApi = window.Translator || window.ai?.translator;
+      if (!translatorApi?.create) return null;
+
+      const translator = await withTimeout(
+        translatorApi.create({ sourceLanguage, targetLanguage }),
+        3500,
+        "Translator setup"
+      );
+      translatorCache.set(cacheKey, translator);
+      return translator;
+    }
+
+    async function translateText() {
+      const text = translateInput.value.trim();
+      if (!text) {
+        translateOutput.value = "";
+        renderSentenceAnalysis("", translateDirection.value);
+        translationStatus.textContent = "Paste text first.";
+        return;
+      }
+
+      const direction = detectTranslateDirection(text);
+      const [sourceLanguage, targetLanguage] = direction === "en-zh" ? ["en", "zh"] : ["zh", "en"];
+      renderSentenceAnalysis(text, direction);
+      translationStatus.textContent = "Translating...";
+      translateBtn.disabled = true;
+
+      try {
+        const browserTranslator = await getBrowserTranslator(sourceLanguage, targetLanguage);
+        if (browserTranslator?.translate) {
+          translateOutput.value = await withTimeout(
+            browserTranslator.translate(text),
+            7000,
+            "Translation"
+          );
+          translationStatus.textContent = "Translated with the browser translation model.";
+        } else {
+          translateOutput.value = localTermDraft(text, direction);
+          translationStatus.textContent = "Browser translation is not available here. Showing a local term-based draft for structure and key meaning.";
+        }
+      } catch (error) {
+        translateOutput.value = localTermDraft(text, direction);
+        translationStatus.textContent = "Full translation model was unavailable. Showing a local term-based draft and clause breakdown.";
+      } finally {
+        translateBtn.disabled = false;
+      }
+    }
+
     input.addEventListener("input", renderCandidates);
 
     input.addEventListener("keydown", event => {
@@ -1147,6 +1541,26 @@
       copyBtn.textContent = "✓";
       setTimeout(() => { copyBtn.textContent = "⧉"; }, 900);
       input.focus();
+    });
+
+    translateBtn.addEventListener("click", translateText);
+    translateInput.addEventListener("keydown", event => {
+      if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+        event.preventDefault();
+        translateText();
+      }
+    });
+    swapTranslateBtn.addEventListener("click", () => {
+      translateDirection.value = translateDirection.value === "en-zh" ? "zh-en" : "en-zh";
+      const source = translateInput.value;
+      translateInput.value = translateOutput.value;
+      translateOutput.value = source;
+      renderSentenceAnalysis(translateInput.value, detectTranslateDirection(translateInput.value));
+    });
+    copyTranslationBtn.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(translateOutput.value);
+      copyTranslationBtn.textContent = "✓";
+      setTimeout(() => { copyTranslationBtn.textContent = "⧉"; }, 900);
     });
 
     samples.forEach(sample => {

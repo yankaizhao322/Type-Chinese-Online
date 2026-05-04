@@ -1,7 +1,9 @@
 # Type Chinese
 
-A small frontend-only website for typing Chinese with pinyin candidates.
+A small frontend-only website for typing Chinese with pinyin candidates and Chinese-English translation.
 It includes a Netlify Forms feedback form for collecting missing words, wrong candidates, bugs, and ideas after deployment.
+
+The translator prioritizes supported browser translation APIs for full-sentence translation and falls back to local term-based drafts with long-sentence clause breakdowns.
 
 Public site after GitHub Pages is enabled:
 
