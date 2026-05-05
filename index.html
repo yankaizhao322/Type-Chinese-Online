@@ -875,6 +875,32 @@
       "(": "（", ")": "）", "[": "【", "]": "】"
     };
 
+    const nextWordMap = {
+      "你好": ["，", "！", "吗", "啊"],
+      "您好": ["，", "！"],
+      "我": ["是", "想", "要", "爱", "在", "可以"],
+      "你": ["好", "是", "要", "可以", "知道"],
+      "我们": ["可以", "需要", "一起", "现在"],
+      "他们": ["是", "在", "可以"],
+      "今天": ["天气", "很", "是", "可以"],
+      "现在": ["可以", "需要", "开始"],
+      "中文": ["输入", "翻译", "学习"],
+      "微信": ["消息", "支付", "好友"],
+      "网站": ["链接", "首页", "地址"],
+      "谢谢": ["！", "你", "啦"],
+      "可以": ["吗", "的", "了"],
+      "没有": ["问题", "关系"],
+      "没问题": ["。", "！"],
+      "对不起": ["，", "。"],
+      "请问": ["，"],
+      "在": ["哪里", "这里", "那里"],
+      "要": ["不要", "下载", "支付"],
+      "想": ["要", "知道", "学习"],
+      "需要": ["帮助", "确认", "更新"]
+    };
+
+    const defaultNextCandidates = ["，", "。", "的", "了", "是", "我", "你", "可以", "谢谢"];
+
     const input = document.getElementById("pinyinInput");
     const output = document.getElementById("outputText");
     const candidateList = document.getElementById("candidateList");
@@ -1105,10 +1131,81 @@
       return results;
     }
 
+    function addUnique(list, value) {
+      if (value && !list.includes(value)) list.push(value);
+    }
+
+    function phrasePrefixCandidates(spaced, joined) {
+      if (joined.length < 2) return [];
+      const results = [];
+
+      Object.entries(phraseMap)
+        .filter(([key]) => {
+          const normalizedKey = normalize(key);
+          const compactKey = compact(key);
+          return compactKey.startsWith(joined) || (spaced && normalizedKey.startsWith(spaced));
+        })
+        .sort((a, b) => compact(a[0]).length - compact(b[0]).length)
+        .forEach(([, candidates]) => {
+          candidates.forEach(candidate => addUnique(results, candidate));
+        });
+
+      return results.slice(0, 9);
+    }
+
+    function partialPinyinParts(raw) {
+      const text = compact(raw);
+      if (!text) return [];
+      const keys = Object.keys(syllables);
+      const candidates = [];
+      const addParts = (completeParts, tail) => {
+        if (!tail) return;
+        keys
+          .filter(key => key.startsWith(tail))
+          .sort((a, b) => a.length - b.length)
+          .slice(0, 6)
+          .forEach(key => candidates.push([...completeParts, key]));
+      };
+
+      if (raw.includes(" ")) {
+        const tokens = normalize(raw).split(" ").filter(Boolean);
+        const completeParts = tokens.slice(0, -1);
+        if (completeParts.every(part => syllables[part])) addParts(completeParts, tokens.at(-1));
+        return candidates;
+      }
+
+      for (let split = text.length - 1; split >= 0; split--) {
+        const head = text.slice(0, split);
+        const tail = text.slice(split);
+        const completeParts = head ? segmentPinyin(head) : [];
+        if (completeParts) addParts(completeParts, tail);
+        if (candidates.length) break;
+      }
+
+      return candidates;
+    }
+
+    function predictiveSyllableCandidates(raw) {
+      const results = [];
+      partialPinyinParts(raw).forEach(parts => {
+        buildSyllableCandidates(parts).forEach(candidate => addUnique(results, candidate));
+      });
+      return results.slice(0, 9);
+    }
+
+    function contextCandidates() {
+      const text = output.value.trim();
+      if (!text) return [];
+      const match = Object.keys(nextWordMap)
+        .sort((a, b) => b.length - a.length)
+        .find(key => text.endsWith(key));
+      return match ? nextWordMap[match] : defaultNextCandidates;
+    }
+
     function candidatesFor(raw) {
       const spaced = normalize(raw);
       const joined = compact(raw);
-      if (!joined) return [];
+      if (!joined) return contextCandidates();
 
       const phraseHits = [
         ...(phraseMap[spaced] || []),
@@ -1120,8 +1217,10 @@
         : segmentPinyin(raw);
 
       const bySyllable = buildSyllableCandidates(parts);
+      const byPhrasePrefix = phrasePrefixCandidates(spaced, joined);
+      const byPrediction = predictiveSyllableCandidates(raw);
 
-      return [...new Set([...phraseHits, ...bySyllable])].slice(0, 9);
+      return [...new Set([...phraseHits, ...byPhrasePrefix, ...bySyllable, ...byPrediction])].slice(0, 9);
     }
 
     function renderCandidates() {
@@ -1138,11 +1237,11 @@
       });
 
       if (!input.value.trim()) {
-        candidateHint.textContent = "Start typing pinyin to see Chinese candidates.";
+        candidateHint.textContent = activeCandidates.length ? "Next suggestions ready." : "Start typing pinyin to see Chinese candidates.";
       } else if (activeCandidates.length) {
         candidateHint.textContent = "Press Space for the first candidate, or press a number to choose.";
       } else {
-        candidateHint.textContent = "No direct match yet. Add a space between syllables, or press Enter to keep the typed text.";
+        candidateHint.textContent = "Keep typing or press Enter to keep the typed text.";
       }
     }
 
@@ -1405,6 +1504,7 @@
     }
 
     input.addEventListener("input", renderCandidates);
+    output.addEventListener("input", renderCandidates);
 
     input.addEventListener("keydown", event => {
       const key = event.key;
