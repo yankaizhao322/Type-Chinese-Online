@@ -10,7 +10,7 @@ Public site after GitHub Pages is enabled:
 
 Project folder:
 
-`/Users/zhaoyankai/Documents/Codex/Type-Chinese`
+`/Users/zhaoyankai/Documents/Codex/Easy-Input-Tool`
 
 ## Use on this Mac
 
