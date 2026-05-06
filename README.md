@@ -6,7 +6,7 @@ The translator prioritizes supported browser translation APIs for full-sentence 
 
 Public site after GitHub Pages is enabled:
 
-`https://yankaizhao322.github.io/Type-Chinese-Online/`
+`https://yankaizhao322.github.io/Easy-Input-Tool/`
 
 Project folder:
 
