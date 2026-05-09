@@ -1,12 +1,23 @@
 # Deploy
 
-This app is a static website. The whole site is `index.html`, so most static hosts can deploy it without a build step.
+This app is mostly static, with one optional serverless translation endpoint at `/api/translate`.
 
-The Chinese-English translator is frontend-only. In browsers that expose a translation API, it can translate full sentences directly in the browser. Other browsers get a local term-based draft plus clause breakdown for long sentence understanding.
+The Chinese-English translator should use a real translation provider in production. Configure one of these environment variables on Vercel or Netlify:
+
+- `GOOGLE_TRANSLATE_API_KEY`
+- `DEEPL_API_KEY`
+- `OPENAI_API_KEY`
+
+Optional:
+
+- `TRANSLATION_PROVIDER=google|deepl|openai`
+- `OPENAI_TRANSLATE_MODEL=gpt-5-mini`
+
+If no provider key is configured, the app tries supported browser translation APIs and then falls back to a weak local draft. That fallback is only for keeping the UI usable; it is not meant to compete with Google Translate.
 
 ## Easiest online options
 
-- GitHub Pages: this repo publishes from the `gh-pages` branch root.
+- GitHub Pages: this can host the static typing app, but it cannot run `/api/translate`; translation will fall back unless you point the frontend at a separate backend.
 - Netlify: drag this folder into Netlify Drop, or connect a Git repository. Publish directory: `.`
 - Vercel: import this folder/repository. Framework preset: Other. Build command: empty. Output directory: `.`
 

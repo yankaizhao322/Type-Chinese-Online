@@ -2,7 +2,7 @@
 A website for typing Chinese with pinyin candidates and Chinese-English translation.
 It includes a Netlify Forms feedback form for collecting missing words, wrong candidates, bugs, and ideas after deployment.
 
-The translator prioritizes supported browser translation APIs for full-sentence translation and falls back to local term-based drafts with long-sentence clause breakdowns.
+The translator uses a server-side translation API when configured, so API keys are never exposed in the browser. It supports Google Cloud Translation, DeepL, or OpenAI through environment variables, then falls back to browser translation or a weak local draft only when no provider is available.
 
 Public site after GitHub Pages is enabled:
 
@@ -15,6 +15,23 @@ Project folder:
 ## Use on this Mac
 
 Open `index.html` directly in a browser, or double-click `start-local.command`.
+
+For real translation quality locally, run the app through the Node server with one provider key:
+
+```sh
+GOOGLE_TRANSLATE_API_KEY=your_key npm run dev
+```
+
+Supported provider keys:
+
+- `GOOGLE_TRANSLATE_API_KEY`
+- `DEEPL_API_KEY`
+- `OPENAI_API_KEY`
+
+Optional settings:
+
+- `TRANSLATION_PROVIDER=google|deepl|openai`
+- `OPENAI_TRANSLATE_MODEL=gpt-5-mini`
 
 ## Use from another computer
 
@@ -32,4 +49,4 @@ Open `index.html` directly in a browser, or double-click `start-local.command`.
 - Press Enter to commit the visible pinyin.
 - Press Backspace with an empty pinyin box to delete the last Chinese character.
 
-Everything runs in the browser. No API key or build step is needed.
+Typing still runs in the browser. Production-quality translation needs one server-side provider key.

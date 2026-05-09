@@ -4,20 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Type Chinese</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: light;
-      --ink: #18211f;
-      --muted: #5d6764;
-      --line: #d8e0dd;
-      --paper: #f7faf8;
-      --panel: #ffffff;
+      --ink: #2a241d;
+      --muted: #756a5c;
+      --line: #ece4d4;
+      --paper: #f7f1e6;
+      --panel: #fffaf1;
       --accent: #087b73;
       --accent-dark: #066760;
       --warm: #c94b31;
-      --soft: #eaf4f2;
-      --shadow: 0 16px 42px rgba(24, 33, 31, 0.11);
-      --shadow-soft: 0 8px 24px rgba(24, 33, 31, 0.08);
+      --soft: #eef3ec;
+      --shadow: 0 18px 48px rgba(72, 56, 32, 0.08);
+      --shadow-soft: 0 6px 18px rgba(72, 56, 32, 0.06);
+      --serif: "Fraunces", "Cormorant Garamond", Georgia, "Times New Roman", serif;
+      --sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
     }
 
     * { box-sizing: border-box; }
@@ -25,10 +30,11 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-family: var(--sans);
       color: var(--ink);
       background:
-        linear-gradient(180deg, rgba(8, 123, 115, 0.08), rgba(247, 250, 248, 0) 300px),
+        radial-gradient(1100px 480px at 12% -10%, rgba(201, 75, 49, 0.05), transparent 60%),
+        radial-gradient(900px 420px at 100% 0%, rgba(8, 123, 115, 0.05), transparent 65%),
         var(--paper);
     }
 
@@ -52,27 +58,35 @@
       justify-content: space-between;
       gap: 16px;
       min-height: 48px;
-      margin-bottom: 14px;
+      margin: 8px 0 22px;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      font-weight: 800;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: 0.01em;
     }
 
     .brand-mark {
       display: inline-grid;
       place-items: center;
-      width: 34px;
-      height: 34px;
-      border: 1px solid #cfe4df;
-      border-radius: 8px;
-      background: #fff;
+      width: 30px;
+      height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
       color: var(--accent);
       box-shadow: var(--shadow-soft);
-      font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .nav-cluster {
+      display: flex;
+      align-items: center;
+      gap: 18px;
     }
 
     .nav-actions {
@@ -80,36 +94,52 @@
       align-items: center;
       gap: 0;
       flex-wrap: wrap;
-      border: 1px solid #cbd9d5;
-      border-radius: 8px;
-      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
       overflow: hidden;
       box-shadow: var(--shadow-soft);
     }
 
     .nav-link {
-      border-right: 1px solid #e2ebe8;
-      padding: 10px 14px;
+      padding: 9px 18px;
       color: var(--ink);
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      min-width: 92px;
+      font-size: 13.5px;
+      font-weight: 600;
+      min-width: 84px;
       text-align: center;
-    }
-
-    .nav-link:last-child {
-      border-right: 0;
+      letter-spacing: 0.02em;
     }
 
     .nav-link:hover {
-      background: var(--soft);
       color: var(--accent-dark);
     }
 
     .nav-link.active {
       background: var(--accent);
       color: #fff;
+    }
+
+    .nav-link-quiet {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 6px 4px;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .nav-link-quiet:hover {
+      color: var(--ink);
+      border-bottom-color: var(--line);
+    }
+
+    .nav-link-quiet.active {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
     }
 
     .page-view[hidden] {
@@ -119,7 +149,7 @@
     .pane {
       background: var(--panel);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 18px;
       box-shadow: var(--shadow);
       min-width: 0;
     }
@@ -129,13 +159,16 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 12px;
+      padding: 16px 20px;
       border-bottom: 1px solid var(--line);
-      background: #fbfdfc;
+      background: transparent;
     }
 
     .head strong {
-      font-size: 15px;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 19px;
+      letter-spacing: 0.005em;
     }
 
     .tools {
@@ -146,11 +179,11 @@
     }
 
     .icon-btn, .text-btn {
-      min-height: 40px;
-      border: 1px solid #b9cbc6;
-      background: #fff;
+      min-height: 38px;
+      border: 1px solid var(--line);
+      background: var(--panel);
       color: var(--ink);
-      border-radius: 7px;
+      border-radius: 999px;
       cursor: pointer;
       transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
     }
@@ -186,7 +219,7 @@
 
     .icon-btn:hover, .text-btn:hover {
       background: var(--soft);
-      border-color: #9bc9c1;
+      border-color: #cbe1dc;
     }
 
     .primary:hover {
@@ -206,7 +239,7 @@
     }
 
     .workspace {
-      padding: 16px;
+      padding: 22px 24px 26px;
     }
 
     .label {
@@ -227,13 +260,13 @@
     #pinyinInput {
       width: 100%;
       min-height: 52px;
-      border: 1px solid #c8d5d1;
-      border-radius: 8px;
-      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
       outline: none;
-      background: #fff;
+      background: var(--panel);
       color: var(--ink);
-      font-size: 20px;
+      font-size: 19px;
     }
 
     #pinyinInput:focus, #outputText:focus, #translateInput:focus, #translateOutput:focus {
@@ -245,11 +278,11 @@
       display: grid;
       gap: 8px;
       min-height: 52px;
-      border: 1px solid #dbe6e2;
-      border-radius: 8px;
-      background: #fbfdfc;
-      padding: 10px;
-      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 250, 241, 0.6);
+      padding: 12px;
+      margin-bottom: 14px;
     }
 
     .candidates {
@@ -263,14 +296,14 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      min-height: 34px;
-      border: 1px solid #cddbd7;
-      border-radius: 7px;
-      background: #fff;
-      padding: 4px 10px;
+      min-height: 32px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      padding: 4px 12px;
       cursor: pointer;
-      color: #17211f;
-      font-size: 16px;
+      color: var(--ink);
+      font-size: 15px;
     }
 
     .candidate:first-child {
@@ -294,22 +327,22 @@
       width: 100%;
       min-height: 360px;
       resize: vertical;
-      border: 1px solid #c8d5d1;
-      border-radius: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
       outline: none;
-      padding: 14px;
+      padding: 16px;
       color: var(--ink);
-      background: #fff;
-      font-size: 24px;
-      line-height: 1.65;
+      background: var(--panel);
+      font-size: 22px;
+      line-height: 1.7;
       font-family: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
     }
 
     .translation-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      padding: 16px;
+      gap: 16px;
+      padding: 22px 24px 26px;
     }
 
     .translate-toolbar {
@@ -321,14 +354,14 @@
 
     .translate-toolbar select {
       min-height: 38px;
-      border: 1px solid #c8d5d1;
-      border-radius: 7px;
-      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
       color: var(--ink);
-      padding: 0 10px;
+      padding: 0 14px;
       outline: none;
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 13.5px;
+      font-weight: 600;
     }
 
     #translateInput,
@@ -336,14 +369,14 @@
       width: 100%;
       min-height: 260px;
       resize: vertical;
-      border: 1px solid #c8d5d1;
-      border-radius: 8px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
       outline: none;
-      padding: 13px;
+      padding: 14px;
       color: var(--ink);
-      background: #fff;
-      font-size: 17px;
-      line-height: 1.65;
+      background: var(--panel);
+      font-size: 16px;
+      line-height: 1.7;
     }
 
     #translateOutput {
@@ -352,15 +385,50 @@
 
     .analysis-box {
       grid-column: 1 / -1;
-      border: 1px solid #dbe6e2;
-      border-radius: 8px;
-      background: #fbfdfc;
-      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 250, 241, 0.6);
+      padding: 14px 16px;
     }
 
     .analysis-box h3 {
       margin: 0 0 8px;
-      font-size: 14px;
+      font-family: var(--serif);
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.005em;
+    }
+
+    .textarea-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .textarea-tools {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .small-btn {
+      min-height: 30px;
+      padding: 0 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    .char-count {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .char-count.over-limit {
+      color: #b42318;
     }
 
     .analysis-box ol {
@@ -384,8 +452,8 @@
 
     .feedback-form {
       display: grid;
-      gap: 12px;
-      padding: 16px;
+      gap: 14px;
+      padding: 22px 24px 26px;
       max-width: 760px;
     }
 
@@ -399,12 +467,12 @@
     .feedback-form select,
     .feedback-form textarea {
       width: 100%;
-      border: 1px solid #c8d5d1;
-      border-radius: 7px;
-      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel);
       color: var(--ink);
       outline: none;
-      padding: 9px 10px;
+      padding: 10px 12px;
       font-size: 14px;
     }
 
@@ -433,10 +501,14 @@
         display: block;
       }
 
-      .nav-actions {
+      .nav-cluster {
         margin-top: 12px;
+        justify-content: space-between;
+      }
+
+      .nav-actions {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .nav-link {
@@ -466,11 +538,13 @@
 <body>
   <main class="app">
     <nav class="topbar" aria-label="Primary">
-      <div class="brand" aria-label="Type Chinese"><span class="brand-mark">中</span></div>
-      <div class="nav-actions">
-        <a class="nav-link" href="#type" data-page="type">Type</a>
-        <a class="nav-link" href="#translate" data-page="translate">Translate</a>
-        <a class="nav-link" href="#feedback" data-page="feedback">Feedback</a>
+      <div class="brand" aria-label="Type Chinese"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 17.5C7 10.5 12.5 6.5 19 6.5"/><circle cx="19" cy="6.5" r="1.6" fill="currentColor" stroke="none"/></svg></span><span class="brand-name">Type Chinese</span></div>
+      <div class="nav-cluster">
+        <div class="nav-actions">
+          <a class="nav-link" href="#type" data-page="type">Type</a>
+          <a class="nav-link" href="#translate" data-page="translate">Translate</a>
+        </div>
+        <a class="nav-link-quiet" href="#feedback" data-page="feedback">Feedback</a>
       </div>
     </nav>
 
@@ -486,7 +560,7 @@
       <div class="workspace">
         <label class="label" for="pinyinInput">Pinyin input</label>
         <div class="pinyin-line">
-          <input id="pinyinInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type nihao, zhongwen, wo ai ni...">
+          <input id="pinyinInput" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Input">
           <button class="text-btn" id="voiceBtn" type="button" aria-pressed="false">Voice</button>
           <button class="text-btn primary" id="commitBtn">Commit</button>
         </div>
@@ -497,7 +571,7 @@
         </div>
 
         <label class="label" for="outputText">Chinese output</label>
-        <textarea id="outputText" placeholder="中文输出..." lang="zh-CN" spellcheck="false"></textarea>
+        <textarea id="outputText" placeholder="Output" lang="zh-CN" spellcheck="false"></textarea>
       </div>
     </section>
 
@@ -506,9 +580,9 @@
         <strong>Chinese-English Translator</strong>
         <div class="translate-toolbar">
           <select id="translateDirection" aria-label="Translation direction">
+            <option value="auto">Auto detect</option>
             <option value="en-zh">English to Chinese</option>
             <option value="zh-en">Chinese to English</option>
-            <option value="auto">Auto detect</option>
           </select>
           <button class="icon-btn" id="swapTranslateBtn" title="Swap translation direction" aria-label="Swap translation direction">⇄ Swap</button>
           <button class="icon-btn" id="copyTranslationBtn" title="Copy translation" aria-label="Copy translation">⧉ Copy</button>
@@ -517,7 +591,13 @@
       </div>
       <div class="translation-grid">
         <label>
-          <span class="label">Source text</span>
+          <span class="textarea-head">
+            <span class="label">Source text</span>
+            <span class="textarea-tools">
+              <button class="text-btn small-btn" id="translateVoiceBtn" type="button" aria-pressed="false">Voice</button>
+              <span class="char-count" id="translateCharCount">0/1000</span>
+            </span>
+          </span>
           <textarea id="translateInput" placeholder="Paste a long English or Chinese sentence here..." spellcheck="true"></textarea>
         </label>
         <label>
@@ -913,6 +993,7 @@
     const feedbackForm = document.getElementById("feedbackForm");
     const feedbackStatus = document.getElementById("feedbackStatus");
     const translateDirection = document.getElementById("translateDirection");
+    const translateVoiceBtn = document.getElementById("translateVoiceBtn");
     const translateInput = document.getElementById("translateInput");
     const translateOutput = document.getElementById("translateOutput");
     const translateBtn = document.getElementById("translateBtn");
@@ -920,9 +1001,11 @@
     const copyTranslationBtn = document.getElementById("copyTranslationBtn");
     const sentenceAnalysis = document.getElementById("sentenceAnalysis");
     const translationStatus = document.getElementById("translationStatus");
+    const translateCharCount = document.getElementById("translateCharCount");
     const pageViews = Array.from(document.querySelectorAll(".page-view"));
-    const navLinks = Array.from(document.querySelectorAll(".nav-link"));
+    const navLinks = Array.from(document.querySelectorAll("[data-page]"));
 
+    const maxTranslationChars = 1000;
     let activeCandidates = [];
     let recognition = null;
     let voiceListening = false;
@@ -992,13 +1075,21 @@
       "the": "",
       "a": "一个",
       "an": "一个",
+      "hi": "嗨",
+      "hello": "你好",
+      "hey": "嘿",
+      "how": "怎样",
       "I": "我",
+      "me": "我",
+      "my": "我的",
       "you": "你",
+      "your": "你的",
       "we": "我们",
       "they": "他们",
       "it": "它",
       "its": "它的",
       "and": "和",
+      "am": "是",
       "is": "是",
       "are": "是",
       "was": "曾是",
@@ -1014,8 +1105,121 @@
       "deploy": "部署",
       "browser": "浏览器",
       "website": "网站",
+      "word": "单词",
+      "words": "单词",
+      "text": "文本",
+      "fast": "快",
+      "slow": "慢",
+      "accurate": "准确",
+      "accuracy": "准确性",
+      "correct": "正确",
+      "correction": "纠错",
+      "mistake": "错误",
+      "wrong": "错误",
+      "type": "输入",
+      "typing": "输入",
+      "apple": "苹果",
+      "banana": "香蕉",
+      "orange": "橙子",
+      "pear": "梨",
+      "grape": "葡萄",
+      "water": "水",
+      "tea": "茶",
+      "coffee": "咖啡",
+      "rice": "米饭",
+      "noodle": "面条",
+      "food": "食物",
+      "book": "书",
+      "phone": "手机",
+      "computer": "电脑",
+      "school": "学校",
+      "student": "学生",
+      "teacher": "老师",
+      "friend": "朋友",
+      "family": "家庭",
+      "home": "家",
+      "work": "工作",
+      "time": "时间",
+      "today": "今天",
+      "tomorrow": "明天",
+      "yesterday": "昨天",
+      "good": "好",
+      "bad": "坏",
+      "big": "大",
+      "small": "小",
+      "new": "新",
+      "old": "旧",
+      "hot": "热",
+      "cold": "冷",
+      "like": "喜欢",
+      "love": "爱",
+      "want": "想要",
+      "go": "去",
+      "come": "来",
+      "eat": "吃",
+      "drink": "喝",
+      "read": "读",
+      "write": "写",
+      "learn": "学习",
+      "speak": "说",
+      "listen": "听",
+      "see": "看见",
+      "know": "知道",
+      "thank": "感谢",
+      "thanks": "谢谢",
+      "please": "请",
+      "sorry": "对不起",
+      "fine": "很好",
+      "ok": "好",
+      "okay": "好",
+      "yes": "是",
+      "no": "不",
       "Chinese": "中文",
       "English": "英文"
+    };
+
+    const enZhPhrases = {
+      "hi": "嗨",
+      "hello": "你好",
+      "hey": "嘿",
+      "hi how are you": "嗨！你好吗？",
+      "hello how are you": "你好！你好吗？",
+      "how are you": "你好吗",
+      "how are you doing": "你最近怎么样",
+      "how is it going": "最近怎么样",
+      "i am fine": "我很好",
+      "im fine": "我很好",
+      "i am good": "我很好",
+      "im good": "我很好",
+      "i am ok": "我还好",
+      "im ok": "我还好",
+      "i am okay": "我还好",
+      "im okay": "我还好",
+      "i am very good": "我很好",
+      "nice to meet you": "很高兴认识你",
+      "thank you": "谢谢你",
+      "thanks": "谢谢",
+      "you are welcome": "不客气",
+      "good morning": "早上好",
+      "good afternoon": "下午好",
+      "good evening": "晚上好",
+      "good night": "晚安",
+      "see you": "再见",
+      "see you later": "回头见",
+      "goodbye": "再见",
+      "bye": "再见",
+      "what is your name": "你叫什么名字",
+      "my name is": "我的名字是",
+      "i love you": "我爱你",
+      "i like apple": "我喜欢苹果",
+      "i like apples": "我喜欢苹果",
+      "i want water": "我想喝水",
+      "i want tea": "我想喝茶",
+      "i want coffee": "我想喝咖啡",
+      "please help me": "请帮我",
+      "i am sorry": "对不起",
+      "im sorry": "对不起",
+      "no problem": "没问题"
     };
 
     const zhEnTerms = {
@@ -1060,6 +1264,11 @@
       "这个": "this",
       "句子": "sentence",
       "很": "very",
+      "你好": "hello",
+      "嗨": "hi",
+      "嘿": "hey",
+      "怎么样": "how",
+      "好吗": "how are you",
       "和": "and",
       "是": "is",
       "可以": "can",
@@ -1072,8 +1281,109 @@
       "部署": "deploy",
       "浏览器": "browser",
       "网站": "website",
+      "单词": "word",
+      "文本": "text",
+      "快": "fast",
+      "慢": "slow",
+      "准确": "accurate",
+      "准确性": "accuracy",
+      "正确": "correct",
+      "纠错": "correction",
+      "错误": "mistake",
+      "输入": "type",
+      "苹果": "apple",
+      "香蕉": "banana",
+      "橙子": "orange",
+      "梨": "pear",
+      "葡萄": "grape",
+      "水": "water",
+      "茶": "tea",
+      "咖啡": "coffee",
+      "米饭": "rice",
+      "面条": "noodle",
+      "食物": "food",
+      "书": "book",
+      "手机": "phone",
+      "电脑": "computer",
+      "学校": "school",
+      "学生": "student",
+      "老师": "teacher",
+      "朋友": "friend",
+      "家庭": "family",
+      "家": "home",
+      "工作": "work",
+      "时间": "time",
+      "今天": "today",
+      "明天": "tomorrow",
+      "昨天": "yesterday",
+      "好": "good",
+      "坏": "bad",
+      "大": "big",
+      "小": "small",
+      "新": "new",
+      "旧": "old",
+      "热": "hot",
+      "冷": "cold",
+      "喜欢": "like",
+      "爱": "love",
+      "想要": "want",
+      "去": "go",
+      "来": "come",
+      "吃": "eat",
+      "喝": "drink",
+      "读": "read",
+      "写": "write",
+      "学习": "learn",
+      "说": "speak",
+      "听": "listen",
+      "看见": "see",
+      "知道": "know",
+      "感谢": "thank",
+      "谢谢": "thanks",
+      "谢谢你": "thank you",
+      "请": "please",
+      "对不起": "sorry",
+      "很好": "fine",
+      "还好": "okay",
+      "不客气": "you are welcome",
+      "没问题": "no problem",
+      "早上好": "good morning",
+      "下午好": "good afternoon",
+      "晚上好": "good evening",
+      "晚安": "good night",
+      "再见": "goodbye",
       "中文": "Chinese",
       "英文": "English"
+    };
+
+    const zhEnPhrases = {
+      "你好": "hello",
+      "嗨": "hi",
+      "你好吗": "how are you",
+      "你最近怎么样": "how are you doing",
+      "最近怎么样": "how is it going",
+      "我很好": "I am fine",
+      "我还好": "I am okay",
+      "很高兴认识你": "nice to meet you",
+      "谢谢你": "thank you",
+      "谢谢": "thanks",
+      "不客气": "you are welcome",
+      "早上好": "good morning",
+      "下午好": "good afternoon",
+      "晚上好": "good evening",
+      "晚安": "good night",
+      "再见": "goodbye",
+      "回头见": "see you later",
+      "你叫什么名字": "what is your name",
+      "我的名字是": "my name is",
+      "我爱你": "I love you",
+      "我喜欢苹果": "I like apples",
+      "我想喝水": "I want water",
+      "我想喝茶": "I want tea",
+      "我想喝咖啡": "I want coffee",
+      "请帮我": "please help me",
+      "对不起": "I am sorry",
+      "没问题": "no problem"
     };
 
     function normalize(text) {
@@ -1351,6 +1661,81 @@
       }
     }
 
+    let translateRecognition = null;
+    let translateVoiceListening = false;
+
+    function pickTranslateLang() {
+      const direction = translateDirection.value;
+      if (direction === "zh-en") return "zh-CN";
+      if (direction === "en-zh") return "en-US";
+      return /[㐀-鿿]/.test(translateInput.value) ? "zh-CN" : "en-US";
+    }
+
+    function setTranslateVoiceState(nextListening, status = "") {
+      translateVoiceListening = nextListening;
+      translateVoiceBtn.classList.toggle("listening", translateVoiceListening);
+      translateVoiceBtn.textContent = translateVoiceListening ? "Stop" : "Voice";
+      translateVoiceBtn.setAttribute("aria-pressed", translateVoiceListening ? "true" : "false");
+      if (status) translationStatus.textContent = status;
+    }
+
+    function setupTranslateVoiceInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        translateVoiceBtn.disabled = true;
+        translateVoiceBtn.title = "Voice input is not supported in this browser";
+        return;
+      }
+
+      translateRecognition = new SpeechRecognition();
+      translateRecognition.continuous = false;
+      translateRecognition.interimResults = true;
+      translateRecognition.maxAlternatives = 1;
+
+      translateRecognition.onstart = () => setTranslateVoiceState(true, "Listening...");
+      translateRecognition.onend = () => {
+        if (translateVoiceListening) setTranslateVoiceState(false, "");
+      };
+      translateRecognition.onerror = event => {
+        const message = event.error === "not-allowed"
+          ? "Microphone access was blocked."
+          : "Voice input stopped.";
+        setTranslateVoiceState(false, message);
+      };
+      translateRecognition.onresult = event => {
+        let interim = "";
+        let finalText = "";
+        for (let index = event.resultIndex; index < event.results.length; index++) {
+          const transcript = event.results[index][0].transcript;
+          if (event.results[index].isFinal) finalText += transcript;
+          else interim += transcript;
+        }
+        if (interim.trim()) translationStatus.textContent = interim.trim();
+        if (finalText.trim()) {
+          const prefix = translateInput.value.trim();
+          translateInput.value = prefix ? prefix + " " + finalText.trim() : finalText.trim();
+          updateTranslateLimitState();
+          renderSentenceAnalysis(translateInput.value, detectTranslateDirection(translateInput.value));
+          setTranslateVoiceState(false, "Voice input added.");
+        }
+      };
+    }
+
+    function toggleTranslateVoiceInput() {
+      if (!translateRecognition) return;
+      if (translateVoiceListening) {
+        translateRecognition.stop();
+        setTranslateVoiceState(false);
+        return;
+      }
+      try {
+        translateRecognition.lang = pickTranslateLang();
+        translateRecognition.start();
+      } catch (error) {
+        setTranslateVoiceState(false, "Voice input is already starting.");
+      }
+    }
+
     function removeLastOutputChar() {
       const start = output.selectionStart ?? output.value.length;
       const end = output.selectionEnd ?? output.value.length;
@@ -1407,13 +1792,179 @@
       translateOutput.lang = direction === "en-zh" ? "zh-CN" : "en";
     }
 
+    function escapeRegExp(text) {
+      return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function englishWordList() {
+      return Object.keys(enZhTerms)
+        .filter(term => /^[a-z]+$/i.test(term) && term.length >= 4 && enZhTerms[term])
+        .map(term => term.toLowerCase());
+    }
+
+    const englishCorrectionWords = englishWordList();
+
+    function editDistanceWithin(source, target, limit) {
+      if (Math.abs(source.length - target.length) > limit) return limit + 1;
+
+      let previous = Array.from({ length: target.length + 1 }, (_, index) => index);
+      for (let sourceIndex = 1; sourceIndex <= source.length; sourceIndex++) {
+        const current = [sourceIndex];
+        let rowBest = current[0];
+        for (let targetIndex = 1; targetIndex <= target.length; targetIndex++) {
+          const cost = source[sourceIndex - 1] === target[targetIndex - 1] ? 0 : 1;
+          const value = Math.min(
+            previous[targetIndex] + 1,
+            current[targetIndex - 1] + 1,
+            previous[targetIndex - 1] + cost
+          );
+          current[targetIndex] = value;
+          rowBest = Math.min(rowBest, value);
+        }
+        if (rowBest > limit) return limit + 1;
+        previous = current;
+      }
+
+      return previous[target.length];
+    }
+
+    function bestEnglishCorrection(word) {
+      const lower = word.toLowerCase();
+      if (enZhTerms[lower] || lower.length < 4) return null;
+
+      const maxDistance = lower.length <= 5 ? 1 : 2;
+      let best = null;
+      let bestDistance = maxDistance + 1;
+      let tied = false;
+
+      englishCorrectionWords.forEach(candidate => {
+        if (candidate[0] !== lower[0]) return;
+        const distance = editDistanceWithin(lower, candidate, maxDistance);
+        if (distance < bestDistance) {
+          best = candidate;
+          bestDistance = distance;
+          tied = false;
+        } else if (distance === bestDistance) {
+          tied = true;
+        }
+      });
+
+      return best && !tied ? best : null;
+    }
+
+    function correctEnglishTypos(text) {
+      const corrections = [];
+      const correctedText = text.replace(/\b[a-z]{4,}\b/gi, word => {
+        const correction = bestEnglishCorrection(word);
+        if (!correction) return word;
+        corrections.push({ from: word, to: correction });
+        return correction;
+      });
+
+      return { text: correctedText, corrections };
+    }
+
+    function normalizeEnglishPhrase(text) {
+      return text
+        .toLowerCase()
+        .replace(/[’']/g, "")
+        .replace(/[^a-z0-9]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function normalizeChinesePhrase(text) {
+      return text
+        .replace(/[，。！？；、,.!?;\s]/g, "")
+        .trim();
+    }
+
+    function splitSentenceParts(text) {
+      const parts = [];
+      const pattern = /([^.!?。！？\n]+)([.!?。！？]*)/g;
+      let match;
+
+      while ((match = pattern.exec(text)) !== null) {
+        const body = match[1].trim();
+        if (!body) continue;
+        parts.push({
+          body,
+          punctuation: match[2] || ""
+        });
+      }
+
+      return parts.length ? parts : [{ body: text.trim(), punctuation: "" }];
+    }
+
+    function chinesePunctuationFor(mark) {
+      if (/[?？]/.test(mark)) return "？";
+      if (/[!！]/.test(mark)) return "！";
+      return "。";
+    }
+
+    function englishPunctuationFor(mark) {
+      if (/[?？]/.test(mark)) return "?";
+      if (/[!！]/.test(mark)) return "!";
+      return ".";
+    }
+
+    function phraseDraft(text, direction) {
+      const phraseMap = direction === "en-zh" ? enZhPhrases : zhEnPhrases;
+      const normalizePhrase = direction === "en-zh" ? normalizeEnglishPhrase : normalizeChinesePhrase;
+      const parts = splitSentenceParts(text);
+      const translated = [];
+      let matched = 0;
+
+      parts.forEach(part => {
+        const key = normalizePhrase(part.body);
+        const phrase = phraseMap[key];
+        if (!phrase) {
+          translated.push(null);
+          return;
+        }
+
+        matched += 1;
+        if (direction === "en-zh") {
+          translated.push(/[。！？]$/.test(phrase) ? phrase : `${phrase}${chinesePunctuationFor(part.punctuation)}`);
+        } else {
+          translated.push(/[.!?]$/.test(phrase) ? phrase : `${phrase}${englishPunctuationFor(part.punctuation)}`);
+        }
+      });
+
+      if (!matched) return null;
+
+      return {
+        text: translated
+          .map((value, index) => value || parts[index].body + parts[index].punctuation)
+          .join(direction === "en-zh" ? "" : " ")
+          .replace(/\s+/g, " ")
+          .trim(),
+        complete: matched === parts.length
+      };
+    }
+
     function localTermDraft(text, direction) {
       const map = direction === "en-zh" ? enZhTerms : zhEnTerms;
-      let draft = text;
+      const correctionResult = direction === "en-zh"
+        ? correctEnglishTypos(text)
+        : { text, corrections: [] };
+      const phraseResult = phraseDraft(correctionResult.text, direction);
+
+      if (phraseResult?.complete) {
+        return {
+          text: phraseResult.text,
+          correctedText: correctionResult.text,
+          corrections: correctionResult.corrections,
+          phraseMatched: true,
+          changed: true
+        };
+      }
+
+      let draft = correctionResult.text;
       Object.entries(map)
         .sort((a, b) => b[0].length - a[0].length)
         .forEach(([source, target]) => {
-          const escaped = source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const escaped = escapeRegExp(source);
           const pattern = direction === "en-zh"
             ? new RegExp(`\\b${escaped}\\b`, "gi")
             : new RegExp(escaped, "g");
@@ -1439,7 +1990,48 @@
           .trim();
       }
 
-      return draft;
+      if (phraseResult && phraseResult.text.length > draft.length) {
+        draft = phraseResult.text;
+      }
+
+      return {
+        text: draft,
+        correctedText: correctionResult.text,
+        corrections: correctionResult.corrections,
+        phraseMatched: Boolean(phraseResult),
+        changed: draft !== text || correctionResult.text !== text
+      };
+    }
+
+    function shouldUseFastLocal(text, direction, localResult) {
+      if (localResult.phraseMatched) return true;
+      if (localResult.corrections.length) return true;
+      if (!localResult.changed) return false;
+
+      if (direction === "zh-en") {
+        return text.length <= 40 || splitLongSentence(text).length <= 1;
+      }
+
+      const words = text.match(/[a-z]+/gi) || [];
+      return words.length <= 6 || text.length <= 80;
+    }
+
+    function localStatus(localResult, usedFastPath) {
+      if (localResult.corrections.length) {
+        const corrections = localResult.corrections
+          .slice(0, 3)
+          .map(({ from, to }) => `${from} -> ${to}`)
+          .join(", ");
+        return `Corrected ${corrections}. Showing a fast local translation.`;
+      }
+
+      if (localResult.phraseMatched) {
+        return "Matched common conversation phrases. Showing a fast local translation.";
+      }
+
+      return usedFastPath
+        ? "Showing a fast local translation."
+        : "Full translation model was unavailable. Showing a local term-based draft and clause breakdown.";
     }
 
     function withTimeout(promise, timeoutMs, label) {
@@ -1460,11 +2052,41 @@
 
       const translator = await withTimeout(
         translatorApi.create({ sourceLanguage, targetLanguage }),
-        3500,
+        1200,
         "Translator setup"
       );
       translatorCache.set(cacheKey, translator);
       return translator;
+    }
+
+    async function translateWithServer(text, direction) {
+      const response = await fetch("/api/translate", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ text, direction })
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        const error = new Error(data.setup || data.detail || data.error || "Translation service failed.");
+        error.status = response.status;
+        throw error;
+      }
+
+      if (!data.translation) throw new Error("Translation service returned an empty result.");
+      return data;
+    }
+
+    function updateTranslateLimitState() {
+      const length = translateInput.value.trim().length;
+      const overLimit = length > maxTranslationChars;
+      translateCharCount.textContent = `${length}/${maxTranslationChars}`;
+      translateCharCount.classList.toggle("over-limit", overLimit);
+      translateBtn.disabled = overLimit;
+      if (overLimit) {
+        translationStatus.textContent = `Text is too long. Keep each translation under ${maxTranslationChars} characters to control translation API usage.`;
+      }
+      return { length, overLimit };
     }
 
     async function translateText() {
@@ -1475,29 +2097,45 @@
         translationStatus.textContent = "Paste text first.";
         return;
       }
+      const limitState = updateTranslateLimitState();
+      if (limitState.overLimit) return;
 
       const direction = detectTranslateDirection(text);
       const [sourceLanguage, targetLanguage] = direction === "en-zh" ? ["en", "zh"] : ["zh", "en"];
+      const localResult = localTermDraft(text, direction);
       renderSentenceAnalysis(text, direction);
-      translationStatus.textContent = "Translating...";
+      translationStatus.textContent = "Translating with the server model...";
       translateBtn.disabled = true;
 
       try {
-        const browserTranslator = await getBrowserTranslator(sourceLanguage, targetLanguage);
-        if (browserTranslator?.translate) {
-          translateOutput.value = await withTimeout(
-            browserTranslator.translate(text),
-            7000,
-            "Translation"
-          );
-          translationStatus.textContent = "Translated with the browser translation model.";
-        } else {
-          translateOutput.value = localTermDraft(text, direction);
-          translationStatus.textContent = "Browser translation is not available here. Showing a local term-based draft for structure and key meaning.";
+        const serverResult = await translateWithServer(text, direction);
+        translateOutput.value = serverResult.translation;
+        translationStatus.textContent = `Translated with ${serverResult.providerLabel || "the server translation model"}.`;
+      } catch (serverError) {
+        translationStatus.textContent = "Server translation unavailable. Trying browser translation...";
+
+        try {
+          const browserTranslator = await getBrowserTranslator(sourceLanguage, targetLanguage);
+          if (browserTranslator?.translate) {
+            translateOutput.value = await withTimeout(
+              browserTranslator.translate(text),
+              2500,
+              "Translation"
+            );
+            translationStatus.textContent = "Translated with the browser translation model.";
+            return;
+          }
+        } catch (browserError) {
+          // The local fallback below keeps the app usable without network credentials.
         }
-      } catch (error) {
-        translateOutput.value = localTermDraft(text, direction);
-        translationStatus.textContent = "Full translation model was unavailable. Showing a local term-based draft and clause breakdown.";
+
+        if (shouldUseFastLocal(text, direction, localResult)) {
+          translateOutput.value = localResult.text;
+          translationStatus.textContent = `${localStatus(localResult, true)} To get real translation quality, configure GOOGLE_TRANSLATE_API_KEY, DEEPL_API_KEY, or OPENAI_API_KEY.`;
+        } else {
+          translateOutput.value = localResult.text;
+          translationStatus.textContent = `${serverError.message} Showing a weak local fallback only. Configure a real translation API for production quality.`;
+        }
       } finally {
         translateBtn.disabled = false;
       }
@@ -1558,6 +2196,9 @@
       input.focus();
     });
 
+    translateInput.addEventListener("input", updateTranslateLimitState);
+    updateTranslateLimitState();
+
     translateBtn.addEventListener("click", translateText);
     translateInput.addEventListener("keydown", event => {
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
@@ -1571,12 +2212,14 @@
       translateInput.value = translateOutput.value;
       translateOutput.value = source;
       renderSentenceAnalysis(translateInput.value, detectTranslateDirection(translateInput.value));
+      updateTranslateLimitState();
     });
     copyTranslationBtn.addEventListener("click", async () => {
       await navigator.clipboard.writeText(translateOutput.value);
       copyTranslationBtn.textContent = "✓ Copied";
       setTimeout(() => { copyTranslationBtn.textContent = "⧉ Copy"; }, 900);
     });
+    translateVoiceBtn.addEventListener("click", toggleTranslateVoiceInput);
 
     feedbackForm.addEventListener("submit", async event => {
       event.preventDefault();
@@ -1601,6 +2244,7 @@
 
     renderCandidates();
     setupVoiceInput();
+    setupTranslateVoiceInput();
     window.addEventListener("hashchange", renderPage);
     renderPage();
   </script>
