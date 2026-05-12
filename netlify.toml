@@ -2,6 +2,19 @@
   publish = "."
   command = ""
 
+[functions]
+  directory = "netlify/functions"
+
+[[redirects]]
+  from = "/api/translate"
+  to = "/.netlify/functions/translate"
+  status = 200
+
+[[redirects]]
+  from = "/api/pinyin"
+  to = "/.netlify/functions/pinyin"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]

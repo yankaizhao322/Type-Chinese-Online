@@ -1561,10 +1561,8 @@
       return [...new Set([...phraseHits, ...byPhrasePrefix, ...bySyllable, ...byPrediction])].slice(0, 9);
     }
 
-    function renderCandidates() {
-      activeCandidates = candidatesFor(input.value);
+    function renderCandidateButtons() {
       candidateList.innerHTML = "";
-
       activeCandidates.forEach((candidate, index) => {
         const button = document.createElement("button");
         button.className = "candidate";
@@ -1573,13 +1571,44 @@
         button.addEventListener("click", () => commit(candidate));
         candidateList.appendChild(button);
       });
+    }
 
+    let apiTimer = null;
+
+    async function fetchApiCandidates(queryText) {
+      try {
+        const res = await fetch(`/api/pinyin?text=${encodeURIComponent(queryText)}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const apiList = data.candidates || [];
+        if (!apiList.length) return;
+        // Only apply if the input hasn't changed since we fired the request
+        if (compact(input.value) !== queryText) return;
+        activeCandidates = [...new Set([...apiList, ...activeCandidates])].slice(0, 9);
+        renderCandidateButtons();
+      } catch {
+        // API unreachable — local candidates already showing, nothing to do
+      }
+    }
+
+    function renderCandidates() {
+      activeCandidates = candidatesFor(input.value);
+      renderCandidateButtons();
+
+      const joined = compact(input.value);
       if (!input.value.trim()) {
         candidateHint.textContent = activeCandidates.length ? "Next suggestions ready." : "Start typing pinyin to see Chinese candidates.";
       } else if (activeCandidates.length) {
         candidateHint.textContent = "Press Space for the first candidate, or press a number to choose.";
       } else {
         candidateHint.textContent = "Keep typing or press Enter to keep the typed text.";
+      }
+
+      // Fire async API lookup after a short debounce (150ms) so we don't
+      // hammer the API on every keystroke
+      if (joined.length >= 2) {
+        clearTimeout(apiTimer);
+        apiTimer = setTimeout(() => fetchApiCandidates(joined), 150);
       }
     }
 
