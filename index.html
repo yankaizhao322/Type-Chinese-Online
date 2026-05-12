@@ -862,7 +862,39 @@
       "deng yi xia": ["等一下"],
       dengyixia: ["等一下"],
       "kan yi xia": ["看一下"],
-      kanyixia: ["看一下"]
+      kanyixia: ["看一下"],
+      // words where target chars are too deep in pools even after frequency fixes
+      zhidao: ["知道"],
+      buzhidao: ["不知道"],
+      zhishi: ["知识"],
+      xihuan: ["喜欢"],
+      kaishi: ["开始"],
+      jieshu: ["结束"],
+      jixu: ["继续"],
+      renshi: ["认识"],
+      lishi: ["历史"],
+      jieguo: ["结果"],
+      shijie: ["世界"],
+      shiji: ["世纪"],
+      yisheng: ["医生"],
+      yiyuan: ["医院"],
+      huanying: ["欢迎"],
+      jishu: ["技术"],
+      yiban: ["一般"],
+      shangwu: ["上午"],
+      zhongwu: ["中午"],
+      xiawu: ["下午"],
+      shiyong: ["使用"],
+      jiating: ["家庭"],
+      guojia: ["国家"],
+      wenhua: ["文化"],
+      jiaoyu: ["教育"],
+      yinyue: ["音乐"],
+      meishu: ["美术"],
+      tiyu: ["体育"],
+      kexue: ["科学"],
+      shuxue: ["数学"],
+      wuli: ["物理"]
     };
 
     const syllables = {
@@ -891,10 +923,10 @@
       guan: "关管馆观", guang: "光广逛", gui: "贵归鬼规", gun: "滚棍", guo: "国过果锅",
       ha: "哈", hai: "还海害孩", han: "汉喊寒汗", hang: "行航", hao: "好号浩",
       he: "和喝河何合", hei: "黑嘿", hen: "很恨狠", heng: "横恒", hong: "红轰宏",
-      hou: "后候厚猴", hu: "胡户湖呼护", hua: "话花华画", huai: "坏怀", huan: "换还欢环",
-      huang: "黄慌皇", hui: "会回灰汇", hun: "混婚魂", huo: "或火活货", ji: "机几及己记级",
+      hou: "后候厚猴", hu: "胡户湖呼护", hua: "话花华画", huai: "坏怀", huan: "欢换还环",
+      huang: "黄慌皇", hui: "会回灰汇", hun: "混婚魂", huo: "或火活货", ji: "机几及己记级继技季",
       jia: "家加价假架", jian: "见间件简建", jiang: "讲将江奖", jiao: "叫教交脚角",
-      jie: "解姐接街节", jin: "进近今金仅", jing: "经京精静竟", jiong: "窘", jiu: "就九久酒",
+      jie: "解姐接街节界结戒", jin: "进近今金仅", jing: "经京精静竟", jiong: "窘", jiu: "就九久酒",
       ju: "句局举据居", juan: "卷捐圈", jue: "觉决绝", jun: "军君均", ka: "卡",
       kai: "开凯", kan: "看砍刊", kang: "康抗", kao: "考靠烤", ke: "可课客科渴",
       ken: "肯啃", keng: "坑", kong: "空恐孔", kou: "口扣", ku: "苦哭库酷",
@@ -902,7 +934,7 @@
       kun: "困昆", kuo: "阔括", la: "拉啦辣", lai: "来赖", lan: "蓝兰烂懒",
       lang: "浪郎狼", lao: "老劳捞", le: "了乐", lei: "类累泪雷", leng: "冷",
       li: "里理力离李立", lia: "俩", lian: "连脸练联", liang: "两量亮良", liao: "了聊料",
-      lie: "列烈裂", lin: "林临邻", ling: "零另令灵", liu: "六留流刘", lo: "咯",
+      lie: "列烈裂", lin: "林临邻", ling: "零另令灵领", liu: "六留流刘", lo: "咯",
       long: "龙隆弄", lou: "楼漏", lu: "路录陆露", luan: "乱卵", lun: "论轮",
       luo: "罗落洛", lv: "绿旅律吕", lve: "略", ma: "吗妈马嘛麻", mai: "买卖麦",
       man: "慢满曼", mang: "忙芒", mao: "猫毛冒帽", me: "么", mei: "没美每妹",
@@ -924,26 +956,26 @@
       sa: "撒洒", sai: "赛塞", san: "三散伞", sang: "桑嗓", sao: "扫嫂", se: "色涩",
       sen: "森", seng: "僧", sha: "杀沙傻啥", shai: "晒筛", shan: "山善闪衫",
       shang: "上商伤尚", shao: "少烧稍绍", she: "社设蛇舍", shen: "什身深神",
-      sheng: "生声省胜", shi: "是时十事市", shou: "手受收首", shu: "书数树熟",
+      sheng: "生声省胜", shi: "是时事十市识实始使史式试世室", shou: "手受收首", shu: "书数树熟束输术",
       shua: "刷耍", shuai: "帅摔", shuan: "栓", shuang: "双爽", shui: "水谁睡税",
       shun: "顺瞬", shuo: "说硕", si: "四思死斯", song: "送松宋", sou: "搜艘",
       su: "素速苏", suan: "算酸", sui: "岁随碎", sun: "孙损", suo: "所锁索",
       ta: "他她它塔踏", tai: "太台抬态", tan: "谈弹坦叹", tang: "堂糖汤唐",
       tao: "套讨桃逃", te: "特", teng: "疼腾", ti: "题体提替", tian: "天田填甜",
-      tiao: "条跳调", tie: "铁贴", ting: "听停挺厅", tong: "同通痛童", tou: "头投偷",
+      tiao: "条跳调", tie: "铁贴", ting: "听停挺厅", tong: "同通痛童统", tou: "头投偷",
       tu: "土图突吐", tuan: "团", tui: "退推腿", tun: "吞屯", tuo: "托脱拖",
       wa: "哇挖娃", wai: "外歪", wan: "完晚万玩", wang: "王网往忘旺望亡枉", wei: "为位喂微围未维卫",
-      wen: "文问闻温", weng: "翁", wo: "我握窝", wu: "无五物屋", xi: "西洗系喜息",
-      xia: "下夏吓虾", xian: "先现线县显", xiang: "想向象香", xiao: "小笑校晓",
-      xie: "写谢些鞋", xin: "新心信辛欣芯薪馨", xing: "行星性姓", xiong: "兄胸雄", xiu: "修秀休",
+      wen: "文问闻温", weng: "翁", wo: "我握窝", wu: "无五物屋午务舞", xi: "西习喜洗系息细",
+      xia: "下夏吓虾", xian: "先现线县显限鲜献", xiang: "想向象香", xiao: "小笑校晓",
+      xie: "写谢些鞋", xin: "新心信辛欣芯薪馨", xing: "行星型性姓", xiong: "兄胸雄", xiu: "修秀休",
       xu: "需许徐续", xuan: "选宣玄", xue: "学雪血", xun: "寻训讯", ya: "呀亚牙",
       yan: "眼言演烟严", yang: "样羊阳养", yao: "要药摇腰", ye: "也夜业叶",
-      yi: "一以已意衣", yin: "因音银引", ying: "英影应硬", yo: "哟", yong: "用永拥",
-      you: "有又由友", yu: "于与语雨鱼", yuan: "元远员园", yue: "月越约乐",
+      yi: "一以已意衣医议亿", yin: "因音银引", ying: "英影应硬迎", yo: "哟", yong: "用永拥",
+      you: "有又由友", yu: "于与语雨鱼育预域", yuan: "元远员园院愿原源", yue: "月越约乐",
       yun: "云运晕", za: "杂砸", zai: "在再载", zan: "咱赞暂攒簪昝瓒", zang: "脏葬",
       zao: "早造遭", ze: "则责泽", zei: "贼", zen: "怎", zeng: "曾增", zha: "找炸扎",
       zhai: "摘窄债", zhan: "站战展占", zhang: "张章长掌", zhao: "找照赵招",
-      zhe: "这着者折", zhen: "真阵镇针", zheng: "正整证争", zhi: "之只知直",
+      zhe: "这着者折", zhen: "真阵镇针", zheng: "正整证争", zhi: "知之只直",
       zhong: "中种重众", zhou: "周州粥", zhu: "主住猪祝", zhua: "抓", zhuai: "拽",
       zhuan: "转专赚", zhuang: "装状庄", zhui: "追坠", zhun: "准", zhuo: "桌着捉",
       zi: "子字自资", zong: "总宗", zou: "走奏", zu: "组足族", zuan: "钻", zui: "最嘴罪",
@@ -1412,32 +1444,28 @@
       if (!parts || !parts.length || !parts.every(part => syllables[part])) return [];
       const pools = parts.map(part => syllables[part].split("").slice(0, 9));
       const results = [];
-      const add = candidate => {
-        if (candidate && !results.includes(candidate)) results.push(candidate);
-      };
+      const seen = new Set();
+      const add = c => { if (c && !seen.has(c)) { seen.add(c); results.push(c); } };
 
-      for (let offset = 0; results.length < 9 && offset < 9; offset++) {
-        add(pools.map(pool => pool[offset % pool.length]).join(""));
+      // BFS by total rank-sum: explores combinations closest to "most-common chars first"
+      // so 不知道 ([0,0,1] = sum 1) surfaces before obscure combinations
+      const maxSum = pools.reduce((s, p) => s + p.length - 1, 0);
+      for (let targetSum = 0; targetSum <= maxSum && results.length < 9; targetSum++) {
+        const gen = (pi, rem, chosen) => {
+          if (results.length >= 9) return;
+          if (pi === pools.length) {
+            if (rem === 0) add(chosen.join(""));
+            return;
+          }
+          for (let i = 0; i <= Math.min(rem, pools[pi].length - 1) && results.length < 9; i++) {
+            chosen.push(pools[pi][i]);
+            gen(pi + 1, rem - i, chosen);
+            chosen.pop();
+          }
+        };
+        gen(0, targetSum, []);
       }
 
-      for (let syllableIndex = 0; results.length < 9 && syllableIndex < pools.length; syllableIndex++) {
-        for (let charIndex = 1; results.length < 9 && charIndex < pools[syllableIndex].length; charIndex++) {
-          const candidate = pools.map((pool, index) => index === syllableIndex ? pool[charIndex] : pool[0]).join("");
-          add(candidate);
-        }
-      }
-
-      const walk = (index, chars) => {
-        if (results.length >= 9) return;
-        if (index === pools.length) {
-          add(chars.join(""));
-          return;
-        }
-        pools[index].forEach(char => walk(index + 1, [...chars, char]));
-      };
-      walk(0, []);
-
-      if (parts.length === 1) pools[0].forEach(add);
       return results;
     }
 
